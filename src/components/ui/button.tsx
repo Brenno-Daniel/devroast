@@ -1,29 +1,22 @@
 "use client";
 
-import { JetBrains_Mono } from "next/font/google";
 import type { ComponentPropsWithoutRef } from "react";
 import { forwardRef } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 import { cn } from "@/lib/cn";
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["500"],
-});
-
 const buttonVariants = tv({
-  base: "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  base: "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   variants: {
     variant: {
-      default: cn(
-        jetbrainsMono.className,
-        "bg-emerald-500 text-neutral-950 hover:bg-emerald-600",
-      ),
+      default:
+        "bg-primary font-mono text-primary-foreground hover:brightness-95 active:brightness-90",
       outline:
-        "border border-emerald-500 bg-transparent font-sans text-emerald-600 hover:bg-emerald-500/10",
+        "border border-primary bg-transparent font-sans text-primary hover:bg-primary/10",
       ghost:
-        "bg-transparent font-sans text-neutral-950 hover:bg-neutral-100 dark:text-neutral-50 dark:hover:bg-neutral-800",
-      destructive: "bg-red-600 font-sans text-white hover:bg-red-700",
+        "bg-transparent font-sans text-foreground hover:bg-foreground/10 dark:hover:bg-foreground/15",
+      destructive:
+        "bg-destructive font-sans text-destructive-foreground hover:brightness-95 active:brightness-90",
     },
     size: {
       sm: "h-8 gap-1.5 px-3 text-xs",

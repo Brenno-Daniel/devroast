@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+/* Design tokens (edit here; @theme maps them to Tailwind utilities) */
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --primary: #10b981;
+  --primary-foreground: #0a0a0a;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --ring: #10b981;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+  --primary: #34d399;
+  --primary-foreground: #0a0a0a;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --ring: #34d399;
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ring: var(--ring);
+  --font-sans:
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono:
+    var(--font-jetbrains-mono), ui-monospace, "Cascadia Code",
+    "Source Code Pro", Menlo, Monaco, Consolas, monospace;
+}
