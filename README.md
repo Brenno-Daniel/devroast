@@ -9,7 +9,7 @@ O **Devroast** é uma aplicação onde a pessoa cola um trecho de código e rece
 - **🌶️ Roast mode** — avaliação sarcástica do código (efeito viral, entretenimento).
 - **📋 Modo real** — mesma ideia, mas **sem sarcasmo**: feedback mais direto e útil.
 
-No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o próprio código sendo “assado”?) com **educação**: pontos de melhororia reais, sugestões acionáveis e a possibilidade de **compartilhar** o resultado nas redes sociais. Também entra no roadmap um **ranking** dos trechos mais mal avaliados — para dar aquela competitividade saudável (ou não tão saudável).
+No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o próprio código sendo “assado”?) com **educação**: pontos de melhoria reais, sugestões acionáveis e a possibilidade de **compartilhar** o resultado nas redes sociais. Também entra no roadmap um **ranking** dos trechos mais mal avaliados — para dar aquela competitividade saudável (ou não tão saudável).
 
 ## 🧰 Stack (até o momento)
 
@@ -24,7 +24,7 @@ No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o 
 
 ## 🛠️ Ferramentas de desenvolvimento
 
-- **[Pencil](https://pencil.dev)** — design do app e concepção de layout (arquivos `.pen`).
+- **[Pencil](https://pencil.dev)** — design do app e conceito de layout (arquivos `.pen`).
 - **OpenCode CLI** — usado na fase inicial do projeto.
 - **[Cursor](https://cursor.com)** — editor principal daqui em diante, com **Composer 2**.
 - **MCP Context7** — documentação e referências atualizadas de bibliotecas no fluxo do assistente.

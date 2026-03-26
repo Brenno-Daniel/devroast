@@ -2,10 +2,10 @@
 
 Este guia define como criar e manter componentes visuais reutilizáveis no Devroast. Novos componentes devem seguir estes pontos para manter consistência com o que já existe (ex.: [`button.tsx`](./button.tsx)).
 
-## Estrutura de ficheiros
+## Estrutura de arquivos
 
-- Um componente por ficheiro: `nome-do-componente.tsx` em minúsculas com hífen ou camelCase consistente com o projeto (hoje: `button.tsx`).
-- Tipos exportados no mesmo ficheiro quando forem específicos do componente (ex.: `ButtonProps`).
+- Um componente por arquivo: `nome-do-componente.tsx` em minúsculas com hífen ou camelCase consistente com o projeto (hoje: `button.tsx`).
+- Tipos exportados no mesmo arquivo quando forem específicos do componente (ex.: `ButtonProps`).
 - Reexportar componentes públicos em [`index.ts`](./index.ts) com **named exports** apenas.
 
 ## Exports
@@ -45,8 +45,14 @@ Este guia define como criar e manter componentes visuais reutilizáveis no Devro
 
 ## Formatação e lint
 
-- O projeto usa **Biome**; após alterações, correr `pnpm format` ou `pnpm lint` na raiz.
+- O projeto usa **Biome**; após alterações, execute `pnpm format` ou `pnpm lint` na raiz.
 
 ## Showcase
 
 - Ao adicionar um componente novo, incluir exemplos na página [`src/app/components/page.tsx`](../../app/components/page.tsx) (todas as variantes e tamanhos relevantes) para revisão visual.
+
+## Idioma no repositório
+
+- **Código e comentários** (`.ts`, `.tsx`, `.css`, etc.): **inglês**.
+- **Copy de interface** (texto visível ao usuário): **português (pt-BR)** quando fizer sentido para o produto.
+- Este arquivo **AGENTS.md** permanece em **português** como convenção da equipe.

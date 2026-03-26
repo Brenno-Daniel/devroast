@@ -5,16 +5,20 @@ import { forwardRef } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 import { cn } from "@/lib/cn";
 
+/**
+ * Variants aligned with the Pencil "Component Library" frame: primary (#10B981),
+ * secondary with #2A2A2A border, link-style ghost with muted text.
+ */
 const buttonVariants = tv({
-  base: "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  base: "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50",
   variants: {
     variant: {
       default:
-        "bg-primary font-mono text-primary-foreground hover:brightness-95 active:brightness-90",
+        "bg-emerald-500 font-mono text-neutral-950 hover:bg-emerald-400 active:bg-emerald-600",
       outline:
-        "border border-primary bg-transparent font-sans text-primary hover:bg-primary/10",
+        "border border-border bg-transparent font-mono text-foreground hover:bg-white/5",
       ghost:
-        "bg-transparent font-sans text-foreground hover:bg-foreground/10 dark:hover:bg-foreground/15",
+        "border border-border bg-transparent font-mono text-muted-foreground hover:bg-white/5 hover:text-foreground",
       destructive:
         "bg-destructive font-sans text-destructive-foreground hover:brightness-95 active:brightness-90",
     },
@@ -24,6 +28,18 @@ const buttonVariants = tv({
       lg: "gap-2 px-8 py-3 text-base",
     },
   },
+  compoundVariants: [
+    {
+      variant: "outline",
+      size: "md",
+      class: "py-2 px-4 text-xs",
+    },
+    {
+      variant: "ghost",
+      size: "md",
+      class: "py-1.5 px-3 text-xs",
+    },
+  ],
   defaultVariants: {
     variant: "default",
     size: "md",
