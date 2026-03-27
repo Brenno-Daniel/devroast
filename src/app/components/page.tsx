@@ -1,12 +1,21 @@
 import type { Metadata } from "next";
 import {
-  AnalysisCard,
+  AnalysisCardDescription,
+  AnalysisCardHeader,
+  AnalysisCardRoot,
+  AnalysisCardTitle,
   Badge,
   Button,
   CodeBlock,
   DiffLine,
-  LeaderboardRow,
-  SwitchField,
+  LeaderboardRowCode,
+  LeaderboardRowLanguage,
+  LeaderboardRowRank,
+  LeaderboardRowRoot,
+  LeaderboardRowScore,
+  SwitchFieldControl,
+  SwitchFieldLabel,
+  SwitchFieldRoot,
 } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -116,8 +125,14 @@ export default function ComponentsShowcasePage() {
             Base UI Switch: estados on/off como no Pencil (roast mode).
           </p>
           <div className="flex flex-wrap gap-8">
-            <SwitchField defaultChecked label="roast mode" />
-            <SwitchField label="roast mode" />
+            <SwitchFieldRoot>
+              <SwitchFieldControl defaultChecked />
+              <SwitchFieldLabel>roast mode</SwitchFieldLabel>
+            </SwitchFieldRoot>
+            <SwitchFieldRoot>
+              <SwitchFieldControl />
+              <SwitchFieldLabel>roast mode</SwitchFieldLabel>
+            </SwitchFieldRoot>
           </div>
         </section>
 
@@ -135,11 +150,19 @@ export default function ComponentsShowcasePage() {
 
         <section className="flex flex-col gap-6">
           <SectionLabel label="cards" />
-          <AnalysisCard
-            description="the var keyword is function-scoped rather than block-scoped, which can lead to unexpected behavior and bugs. modern javascript uses const for immutable bindings and let for mutable ones."
-            status="critical"
-            title="using var instead of const/let"
-          />
+          <AnalysisCardRoot>
+            <AnalysisCardHeader>
+              <Badge variant="critical">critical</Badge>
+            </AnalysisCardHeader>
+            <AnalysisCardTitle>
+              using var instead of const/let
+            </AnalysisCardTitle>
+            <AnalysisCardDescription>
+              the var keyword is function-scoped rather than block-scoped, which
+              can lead to unexpected behavior and bugs. modern javascript uses
+              const for immutable bindings and let for mutable ones.
+            </AnalysisCardDescription>
+          </AnalysisCardRoot>
         </section>
 
         <section className="flex flex-col gap-6">
@@ -168,12 +191,16 @@ export default function ComponentsShowcasePage() {
         <section className="flex flex-col gap-6">
           <SectionLabel label="table_row" />
           <div className="max-w-4xl overflow-hidden rounded-md border border-border">
-            <LeaderboardRow
-              codePreview="function calculateTotal(items) { var total = 0; ..."
-              language="javascript"
-              rank="#1"
-              score="2.1"
-            />
+            <LeaderboardRowRoot className="items-center">
+              <LeaderboardRowRank>#1</LeaderboardRowRank>
+              <LeaderboardRowScore>2.1</LeaderboardRowScore>
+              <LeaderboardRowCode>
+                <span className="truncate font-mono text-muted-foreground">
+                  function calculateTotal(items) {"{"} var total = 0; ...
+                </span>
+              </LeaderboardRowCode>
+              <LeaderboardRowLanguage>javascript</LeaderboardRowLanguage>
+            </LeaderboardRowRoot>
           </div>
         </section>
       </div>

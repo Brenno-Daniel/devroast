@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { HomeActions } from "@/components/home/home-actions";
-import { CodeBlock } from "@/components/ui/code-block";
-import { LeaderboardRow } from "@/components/ui/leaderboard-row";
+import {
+  CodeBlock,
+  LeaderboardRowCode,
+  LeaderboardRowCodeLine,
+  LeaderboardRowLanguage,
+  LeaderboardRowRank,
+  LeaderboardRowRoot,
+  LeaderboardRowScore,
+} from "@/components/ui";
 import {
   HOME_CODE_FILENAME,
   HOME_HERO_SUBTITLE,
@@ -75,13 +82,28 @@ export default async function Home() {
                 <span className="text-right font-medium">lang</span>
               </div>
               {LEADERBOARD_PREVIEW_ROWS.map((row) => (
-                <LeaderboardRow
-                  key={row.rank}
-                  codeLines={[...row.codeLines]}
-                  language={row.language}
-                  rank={row.rank}
-                  score={row.score}
-                />
+                <LeaderboardRowRoot className="items-start" key={row.rank}>
+                  <LeaderboardRowRank
+                    className={
+                      row.rank === "1"
+                        ? "text-amber-500"
+                        : "text-muted-foreground"
+                    }
+                  >
+                    {row.rank}
+                  </LeaderboardRowRank>
+                  <LeaderboardRowScore>{row.score}</LeaderboardRowScore>
+                  <LeaderboardRowCode>
+                    {row.codeLines.map((line) => (
+                      <LeaderboardRowCodeLine key={line}>
+                        {line}
+                      </LeaderboardRowCodeLine>
+                    ))}
+                  </LeaderboardRowCode>
+                  <LeaderboardRowLanguage>
+                    {row.language}
+                  </LeaderboardRowLanguage>
+                </LeaderboardRowRoot>
               ))}
             </div>
 

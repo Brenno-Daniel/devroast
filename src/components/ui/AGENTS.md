@@ -13,6 +13,11 @@ Este guia define como criar e manter componentes visuais reutilizáveis no Devro
 - Usar **sempre named exports**: `export { Foo, fooVariants }` e `export type { FooProps }`.
 - **Não usar** `export default`.
 
+## Componentes compostos (compound)
+
+- Para blocos com vários pedaços de conteúdo (título, descrição, colunas, label + controlo), preferir **subcomponentes nomeados** com prefixo do nome do bloco (ex.: `AnalysisCardRoot`, `AnalysisCardTitle`, `LeaderboardRowRank`, `SwitchFieldRoot` / `SwitchFieldControl` / `SwitchFieldLabel`) em vez de muitas props para texto ou slots.
+- Repassar `className` e `...props` ao elemento nativo de cada peça quando fizer sentido.
+
 ## Estilo e tokens
 
 - Estilização com **Tailwind**; variantes com **`tailwind-variants`** (`tv`).
@@ -34,7 +39,7 @@ Este guia define como criar e manter componentes visuais reutilizáveis no Devro
 
 ## Base UI e Shiki
 
-- **Base UI** (`@base-ui/react`): usar primitivos para comportamento (ex.: [`switch.tsx`](./switch.tsx) com `Switch.Root` / `Switch.Thumb`).
+- **Base UI** (`@base-ui/react`): usar primitivos para comportamento (ex.: [`switch.tsx`](./switch.tsx) com `SwitchFieldControl` a envolver `Switch.Root` / `Switch.Thumb`).
 - **Shiki**: realçar código apenas no **servidor** — [`highlight-code.ts`](../../lib/highlight-code.ts) com `codeToHtml` e tema `vesper`; [`code-block.tsx`](./code-block.tsx) é **Server Component** (sem `"use client"`). Não mover o highlight para o cliente salvo requisito novo.
 
 ## Padrão `tailwind-variants`

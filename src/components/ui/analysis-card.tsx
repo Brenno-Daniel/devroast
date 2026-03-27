@@ -1,32 +1,12 @@
 import type { ComponentPropsWithoutRef } from "react";
-import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
 
-export type AnalysisStatus = "critical" | "warning" | "good";
+export type AnalysisCardRootProps = ComponentPropsWithoutRef<"div">;
 
-export type AnalysisCardProps = ComponentPropsWithoutRef<"div"> & {
-  status: AnalysisStatus;
-  title: string;
-  description: string;
-};
-
-function statusToBadgeVariant(status: AnalysisStatus): BadgeProps["variant"] {
-  if (status === "critical") {
-    return "critical";
-  }
-  if (status === "warning") {
-    return "warning";
-  }
-  return "good";
-}
-
-export function AnalysisCard({
+export function AnalysisCardRoot({
   className,
-  status,
-  title,
-  description,
   ...props
-}: AnalysisCardProps) {
+}: AnalysisCardRootProps) {
   return (
     <div
       className={cn(
@@ -34,20 +14,48 @@ export function AnalysisCard({
         className,
       )}
       {...props}
-    >
-      <div className="flex items-center gap-2">
-        <Badge variant={statusToBadgeVariant(status)}>
-          {status === "critical"
-            ? "critical"
-            : status === "warning"
-              ? "warning"
-              : "good"}
-        </Badge>
-      </div>
-      <h3 className="font-mono text-[13px] text-foreground">{title}</h3>
-      <p className="font-sans text-muted-foreground text-xs leading-relaxed">
-        {description}
-      </p>
-    </div>
+    />
+  );
+}
+
+export type AnalysisCardHeaderProps = ComponentPropsWithoutRef<"div">;
+
+export function AnalysisCardHeader({
+  className,
+  ...props
+}: AnalysisCardHeaderProps) {
+  return (
+    <div className={cn("flex items-center gap-2", className)} {...props} />
+  );
+}
+
+export type AnalysisCardTitleProps = ComponentPropsWithoutRef<"h3">;
+
+export function AnalysisCardTitle({
+  className,
+  ...props
+}: AnalysisCardTitleProps) {
+  return (
+    <h3
+      className={cn("font-mono text-[13px] text-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+export type AnalysisCardDescriptionProps = ComponentPropsWithoutRef<"p">;
+
+export function AnalysisCardDescription({
+  className,
+  ...props
+}: AnalysisCardDescriptionProps) {
+  return (
+    <p
+      className={cn(
+        "font-sans text-muted-foreground text-xs leading-relaxed",
+        className,
+      )}
+      {...props}
+    />
   );
 }
