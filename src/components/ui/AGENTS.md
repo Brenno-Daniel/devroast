@@ -17,7 +17,8 @@ Este guia define como criar e manter componentes visuais reutilizáveis no Devro
 
 - Estilização com **Tailwind**; variantes com **`tailwind-variants`** (`tv`).
 - Mesclar classes externas com o helper [`cn`](../../lib/cn.ts) de `@/lib/cn` (baseado em `tailwind-merge`).
-- Preferir **tokens do tema** definidos em [`src/app/globals.css`](../../app/globals.css): `bg-background`, `text-foreground`, `bg-primary`, `font-mono` (JetBrains via layout), `ring-ring`, etc., em vez de cores soltas, salvo exceção documentada.
+- Preferir **tokens do tema** definidos em [`src/app/globals.css`](../../app/globals.css): `bg-background`, `text-foreground`, `bg-primary`, `ring-ring`, etc., em vez de cores soltas, salvo exceção documentada.
+- **Família tipográfica:** usar apenas os utilitários padrão do Tailwind (`font-sans`, `font-serif`, `font-mono`), configurados em `@theme` via `--font-sans` / `--font-serif` / `--font-mono`. Não introduzir classes ou variáveis de tema do tipo `font-primary` / `font-secondary` para família (isso não confundir com `bg-primary`, que é cor).
 
 ## Tipagem (TypeScript)
 

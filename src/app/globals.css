@@ -26,6 +26,12 @@
   --ring: #10b981;
 }
 
+/*
+ * Font families: use Tailwind’s theme keys only (`--font-sans`, `--font-serif`,
+ * `--font-mono`) so markup uses `font-sans` | `font-serif` | `font-mono`.
+ * Do not add semantic family tokens like `--font-primary` / `--font-secondary`.
+ * @see https://tailwindcss.com/docs/font-family
+ */
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,8 +43,10 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
   --font-sans:
-    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono:
-    var(--font-jetbrains-mono), ui-monospace, "Cascadia Code",
-    "Source Code Pro", Menlo, Monaco, Consolas, monospace;
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
 }
