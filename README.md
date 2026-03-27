@@ -22,6 +22,7 @@ No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o 
 | Componentes (comportamento) | [Base UI](https://base-ui.com/react) (`@base-ui/react`) |
 | Syntax highlight | [Shiki](https://shiki.style) (servidor, tema Vesper) |
 | Lint / format | [Biome](https://biomejs.dev) |
+| Dados | [PostgreSQL](https://www.postgresql.org) + [Drizzle ORM](https://orm.drizzle.team) |
 | Estrutura de código | Diretório [`src/`](./src) (ex.: `src/app`) |
 
 ## 🛠️ Ferramentas de desenvolvimento
@@ -51,6 +52,25 @@ pnpm dev
 
 Abra [http://localhost:3000](http://localhost:3000) no navegador.
 
+## 📦 Base de dados local
+
+1. Copie [`.env.example`](./.env.example) para `.env.local` (gitignored) e ajuste `DATABASE_URL` se necessário.
+2. Suba o Postgres com Docker:
+
+```bash
+docker compose up -d
+```
+
+3. Aplique o schema (migrações em [`drizzle/`](./drizzle)):
+
+```bash
+pnpm db:migrate
+```
+
+`DATABASE_URL` de exemplo (alinhada ao Compose): `postgresql://devroast:devroast@localhost:5432/devroast`
+
+Para validar a ligação: `GET /api/health/db` (responde `{ "ok": true }` quando o DB está acessível).
+
 ## 📜 Scripts
 
 | Comando | Descrição |
@@ -60,6 +80,10 @@ Abra [http://localhost:3000](http://localhost:3000) no navegador.
 | `pnpm start` | Inicia o servidor após `build` |
 | `pnpm lint` | `biome check` |
 | `pnpm format` | Formata e corrige com Biome (`biome check --write`) |
+| `pnpm db:generate` | Gera migrações Drizzle a partir do schema |
+| `pnpm db:migrate` | Aplica migrações |
+| `pnpm db:push` | Empurra o schema para o DB (desenvolvimento) |
+| `pnpm db:studio` | Abre o Drizzle Studio |
 
 ## 📚 Saiba mais
 
