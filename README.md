@@ -19,6 +19,8 @@ No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o 
 | UI | [React](https://react.dev) 19 |
 | Linguagem | [TypeScript](https://www.typescriptlang.org) 5 |
 | Estilização | [Tailwind CSS](https://tailwindcss.com) v4 + [@tailwindcss/postcss](https://tailwindcss.com/docs/installation/using-postcss) |
+| Componentes (comportamento) | [Base UI](https://base-ui.com/react) (`@base-ui/react`) |
+| Syntax highlight | [Shiki](https://shiki.style) (servidor, tema Vesper) |
 | Lint / format | [Biome](https://biomejs.dev) |
 | Estrutura de código | Diretório [`src/`](./src) (ex.: `src/app`) |
 
@@ -33,6 +35,8 @@ No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o 
 ## 📁 Estrutura
 
 O código da aplicação vive em **`src/`** (por exemplo, `src/app` para rotas e layout do App Router).
+
+**Estado atual (desenvolvimento):** layout global com navbar (`SiteHeader`), home em `/` com dados estáticos e preview de leaderboard, biblioteca de componentes em **`/components`**. Convenções do projeto: [`AGENTS.md`](./AGENTS.md).
 
 ## 🚀 Começando
 
