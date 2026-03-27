@@ -43,7 +43,10 @@
   },
   "overrides": [
     {
-      "includes": ["src/components/ui/code-block.tsx"],
+      "includes": [
+        "src/components/ui/code-block.tsx",
+        "src/components/home/code-editor.tsx"
+      ],
       "linter": {
         "rules": {
           "security": {

@@ -7,10 +7,19 @@ import {
   SwitchFieldLabel,
   SwitchFieldRoot,
 } from "@/components/ui/switch";
+import type { EditorLanguageId } from "@/lib/editor-languages";
 import { HOME_ROAST_HINT, HOME_SUBMIT_LABEL } from "@/lib/home-static";
 
-export function HomeActions() {
+export type HomeActionsProps = {
+  code: string;
+  resolvedLanguage: EditorLanguageId;
+};
+
+export function HomeActions({ code, resolvedLanguage }: HomeActionsProps) {
   const [roastMode, setRoastMode] = useState(true);
+
+  void code;
+  void resolvedLanguage;
 
   return (
     <div className="flex w-full max-w-[780px] flex-wrap items-center justify-between gap-4">

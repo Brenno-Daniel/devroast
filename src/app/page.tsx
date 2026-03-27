@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { HomeActions } from "@/components/home/home-actions";
+import { HomeCodePanel } from "@/components/home/home-code-panel";
 import {
-  CodeBlock,
   LeaderboardRowCode,
   LeaderboardRowCodeLine,
   LeaderboardRowLanguage,
@@ -10,7 +9,6 @@ import {
   LeaderboardRowScore,
 } from "@/components/ui";
 import {
-  HOME_CODE_FILENAME,
   HOME_HERO_SUBTITLE,
   HOME_HERO_TITLE_PROMPT,
   HOME_HERO_TITLE_REST,
@@ -20,7 +18,6 @@ import {
   HOME_LEADERBOARD_TITLE_PROMPT,
   HOME_LEADERBOARD_TITLE_REST,
   HOME_LEADERBOARD_VIEW_ALL,
-  HOME_SAMPLE_CODE,
   HOME_STATS_LINE,
   LEADERBOARD_PREVIEW_ROWS,
 } from "@/lib/home-static";
@@ -40,14 +37,7 @@ export default async function Home() {
             </p>
           </section>
 
-          <div className="mx-auto flex w-full max-w-[780px] flex-col gap-4">
-            <CodeBlock
-              code={HOME_SAMPLE_CODE}
-              filename={HOME_CODE_FILENAME}
-              lang="javascript"
-            />
-            <HomeActions />
-          </div>
+          <HomeCodePanel />
 
           <p className="text-center font-mono text-muted-foreground text-xs">
             {HOME_STATS_LINE}
