@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { Button } from "@/components/ui";
+import {
+  AnalysisCard,
+  Badge,
+  Button,
+  CodeBlock,
+  DiffLine,
+  LeaderboardRow,
+  SwitchField,
+} from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Biblioteca de componentes · Devroast",
@@ -9,6 +17,13 @@ export const metadata: Metadata = {
 
 const buttonVariants = ["default", "outline", "ghost", "destructive"] as const;
 const buttonSizes = ["sm", "md", "lg"] as const;
+
+const SAMPLE_JS = `function calculateTotal(items) {
+  var total = 0;
+  for (var i = 0; i < items.length; i++) {
+    total = total + items[i].price;
+  }
+}`;
 
 function SectionLabel({ label }: { label: string }) {
   return (
@@ -92,6 +107,73 @@ export default function ComponentsShowcasePage() {
                 destructive
               </Button>
             </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <SectionLabel label="toggle" />
+          <p className="max-w-xl font-mono text-muted-foreground text-xs">
+            Base UI Switch: estados on/off como no Pencil (roast mode).
+          </p>
+          <div className="flex flex-wrap gap-8">
+            <SwitchField defaultChecked label="roast mode" />
+            <SwitchField label="roast mode" />
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <SectionLabel label="badge_status" />
+          <div className="flex flex-wrap gap-6">
+            <Badge variant="critical">critical</Badge>
+            <Badge variant="warning">warning</Badge>
+            <Badge variant="good">good</Badge>
+            <Badge size="md" variant="destructive">
+              needs_serious_help
+            </Badge>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <SectionLabel label="cards" />
+          <AnalysisCard
+            description="the var keyword is function-scoped rather than block-scoped, which can lead to unexpected behavior and bugs. modern javascript uses const for immutable bindings and let for mutable ones."
+            status="critical"
+            title="using var instead of const/let"
+          />
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <SectionLabel label="code_block" />
+          <p className="max-w-xl font-mono text-muted-foreground text-xs">
+            Shiki com tema Vesper, renderizado no servidor (Server Component).
+          </p>
+          <CodeBlock
+            code={SAMPLE_JS}
+            filename="calculate.js"
+            lang="javascript"
+          />
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <SectionLabel label="diff_line" />
+          <div className="max-w-2xl overflow-hidden rounded-md border border-border">
+            <DiffLine variant="removed">var total = 0;</DiffLine>
+            <DiffLine variant="added">const total = 0;</DiffLine>
+            <DiffLine variant="context">
+              for (let i = 0; i &lt; items.length; i++) {"{"}
+            </DiffLine>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-6">
+          <SectionLabel label="table_row" />
+          <div className="max-w-4xl overflow-hidden rounded-md border border-border">
+            <LeaderboardRow
+              codePreview="function calculateTotal(items) { var total = 0; ..."
+              language="javascript"
+              rank="#1"
+              score="2.1"
+            />
           </div>
         </section>
       </div>

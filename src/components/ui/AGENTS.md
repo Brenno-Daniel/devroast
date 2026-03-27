@@ -32,6 +32,11 @@ Este guia define como criar e manter componentes visuais reutilizáveis no Devro
 - Definir **`displayName`** no componente exportado (útil para DevTools).
 - **`"use client"`** apenas quando for necessário: hooks, estado, listeners que exigem cliente, ou APIs do browser. Se o componente for só marcação estática e aceitar `children` sem interação obrigatória no cliente, pode ser Server Component; componentes interativos (ex.: botão com `onClick`) são Client Components.
 
+## Base UI e Shiki
+
+- **Base UI** (`@base-ui/react`): usar primitivos para comportamento (ex.: [`switch.tsx`](./switch.tsx) com `Switch.Root` / `Switch.Thumb`).
+- **Shiki**: realçar código apenas no **servidor** — [`highlight-code.ts`](../../lib/highlight-code.ts) com `codeToHtml` e tema `vesper`; [`code-block.tsx`](./code-block.tsx) é **Server Component** (sem `"use client"`). Não mover o highlight para o cliente salvo requisito novo.
+
 ## Padrão `tailwind-variants`
 
 - Extrair estilos para `const xxxVariants = tv({ base, variants: { variant: { ... }, size: { ... } }, defaultVariants: { ... } })`.
