@@ -36,8 +36,11 @@ export const HOME_LEADERBOARD_SUBTITLE =
 
 export const HOME_LEADERBOARD_VIEW_ALL = "$ view_all >>";
 
-export const HOME_LEADERBOARD_FOOTER =
-  "showing top 3 of 2,847 · view full leaderboard >>";
+/** Text before the leaderboard footer link (same line). */
+export const HOME_LEADERBOARD_FOOTER_PREFIX = "showing top 3 of 2,847 · ";
+
+/** Label for the inline link to the full leaderboard page. */
+export const HOME_LEADERBOARD_FOOTER_LINK_LABEL = "view full leaderboard >>";
 
 export const LEADERBOARD_PREVIEW_ROWS = [
   {

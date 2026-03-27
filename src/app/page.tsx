@@ -7,7 +7,8 @@ import {
   HOME_HERO_SUBTITLE,
   HOME_HERO_TITLE_PROMPT,
   HOME_HERO_TITLE_REST,
-  HOME_LEADERBOARD_FOOTER,
+  HOME_LEADERBOARD_FOOTER_LINK_LABEL,
+  HOME_LEADERBOARD_FOOTER_PREFIX,
   HOME_LEADERBOARD_SUBTITLE,
   HOME_LEADERBOARD_TITLE_PROMPT,
   HOME_LEADERBOARD_TITLE_REST,
@@ -84,8 +85,14 @@ export default async function Home() {
               ))}
             </div>
 
-            <p className="text-center font-mono text-muted-foreground text-xs">
-              {HOME_LEADERBOARD_FOOTER}
+            <p className="text-center font-mono text-[13px] text-muted-foreground">
+              {HOME_LEADERBOARD_FOOTER_PREFIX}
+              <Link
+                className="font-mono text-[13px] text-muted-foreground no-underline transition-colors hover:text-foreground"
+                href="/leaderboard"
+              >
+                {HOME_LEADERBOARD_FOOTER_LINK_LABEL}
+              </Link>
             </p>
           </section>
         </div>
