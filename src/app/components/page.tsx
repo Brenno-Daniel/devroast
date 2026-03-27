@@ -19,9 +19,9 @@ import {
 } from "@/components/ui";
 
 export const metadata: Metadata = {
-  title: "Biblioteca de componentes · Devroast",
+  title: "Component library · Devroast",
   description:
-    "Showcase dos componentes de interface (espelho do design Pencil).",
+    "UI component showcase aligned with the Pencil Component Library frame.",
 };
 
 const buttonVariants = ["default", "outline", "ghost", "destructive"] as const;
@@ -52,9 +52,9 @@ export default function ComponentsShowcasePage() {
           <span>component_library</span>
         </div>
         <p className="max-w-2xl font-mono text-muted-foreground text-sm leading-relaxed">
-          Pré-visualização alinhada ao frame Component Library (Pencil). Seção
-          de botões espelha primary, secondary e link; abaixo, matriz de
-          variantes para desenvolvimento.
+          Preview aligned with the Component Library frame (Pencil). The buttons
+          section mirrors primary, secondary, and link; below, a variant matrix
+          for development.
         </p>
       </header>
 
@@ -62,7 +62,7 @@ export default function ComponentsShowcasePage() {
         <section className="flex flex-col gap-6">
           <SectionLabel label="buttons" />
           <p className="max-w-xl font-mono text-muted-foreground text-xs">
-            Mesma ordem e rótulos do design: primary (default), secondary
+            Same order and labels as the design: primary (default), secondary
             (outline), link (ghost).
           </p>
           <div className="flex flex-wrap items-center gap-4">
@@ -75,8 +75,7 @@ export default function ComponentsShowcasePage() {
         <section className="flex flex-col gap-6">
           <SectionLabel label="buttons_matrix" />
           <p className="font-mono text-muted-foreground text-xs">
-            Variantes: default, outline, ghost, destructive. Tamanhos: sm, md,
-            lg.
+            Variants: default, outline, ghost, destructive. Sizes: sm, md, lg.
           </p>
 
           <div className="space-y-8">
@@ -89,7 +88,7 @@ export default function ComponentsShowcasePage() {
                   {buttonSizes.map((size) => (
                     <Button key={size} size={size} variant={variant}>
                       {variant === "default"
-                        ? "$ exemplo"
+                        ? "$ example"
                         : `${variant} · ${size}`}
                     </Button>
                   ))}
@@ -100,7 +99,7 @@ export default function ComponentsShowcasePage() {
 
           <div className="mt-6">
             <h3 className="mb-3 font-mono text-foreground/80 text-sm">
-              Estado disabled
+              Disabled state
             </h3>
             <div className="flex flex-wrap gap-4">
               <Button disabled variant="default">
@@ -122,7 +121,7 @@ export default function ComponentsShowcasePage() {
         <section className="flex flex-col gap-6">
           <SectionLabel label="toggle" />
           <p className="max-w-xl font-mono text-muted-foreground text-xs">
-            Base UI Switch: estados on/off como no Pencil (roast mode).
+            Base UI Switch: on/off states as in the Pencil design (roast mode).
           </p>
           <div className="flex flex-wrap gap-8">
             <SwitchFieldRoot>
@@ -168,7 +167,7 @@ export default function ComponentsShowcasePage() {
         <section className="flex flex-col gap-6">
           <SectionLabel label="code_block" />
           <p className="max-w-xl font-mono text-muted-foreground text-xs">
-            Shiki com tema Vesper, renderizado no servidor (Server Component).
+            Shiki with Vesper theme, rendered on the server (Server Component).
           </p>
           <CodeBlock
             code={SAMPLE_JS}
