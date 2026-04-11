@@ -1,23 +1,12 @@
-import { Suspense } from "react";
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/trpc/client";
 import { MetricsDisplay } from "./metrics-display";
-import { MetricsSkeleton } from "./metrics-skeleton";
-import { getCaller } from "@/trpc/server";
 
 export function MetricsSection() {
-  return (
-    <Suspense fallback={<MetricsSkeleton />}>
-      <MetricsFetcher />
-    </Suspense>
-  );
-}
+  const trpc = useTRPC();
+  const { data } = useQuery(trpc.stats.getMetrics.queryOptions());
 
-async function MetricsFetcher() {
-  const caller = await getCaller();
-  const metrics = await caller.stats.getMetrics();
-  return (
-    <MetricsDisplay
-      totalRoasts={metrics.totalRoasts}
-      avgScore={metrics.avgScore}
-    />
-  );
+  return <MetricsDisplay data={data ?? null} />;
 }
