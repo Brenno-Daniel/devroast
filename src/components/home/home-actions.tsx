@@ -12,10 +12,15 @@ import { HOME_ROAST_HINT, HOME_SUBMIT_LABEL } from "@/lib/home-static";
 
 export type HomeActionsProps = {
   code: string;
+  isOverLimit: boolean;
   resolvedLanguage: EditorLanguageId;
 };
 
-export function HomeActions({ code, resolvedLanguage }: HomeActionsProps) {
+export function HomeActions({
+  code,
+  isOverLimit,
+  resolvedLanguage,
+}: HomeActionsProps) {
   const [roastMode, setRoastMode] = useState(true);
 
   void code;
@@ -35,7 +40,7 @@ export function HomeActions({ code, resolvedLanguage }: HomeActionsProps) {
           {HOME_ROAST_HINT}
         </span>
       </div>
-      <Button size="md" type="button" variant="default">
+      <Button disabled={isOverLimit} size="md" type="button" variant="default">
         {HOME_SUBMIT_LABEL}
       </Button>
     </div>

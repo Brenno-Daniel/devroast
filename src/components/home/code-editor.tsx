@@ -7,6 +7,7 @@ export type CodeEditorProps = {
   value: string;
   onChange: (value: string) => void;
   highlightHtml: string;
+  maxLength?: number;
   "aria-label"?: string;
   className?: string;
 };
@@ -15,6 +16,7 @@ export function CodeEditor({
   value,
   onChange,
   highlightHtml,
+  maxLength,
   "aria-label": ariaLabel = "Code to analyze",
   className,
 }: CodeEditorProps) {
@@ -62,7 +64,22 @@ export function CodeEditor({
         spellCheck={false}
         value={value}
         wrap="off"
+        maxLength={maxLength}
       />
+      {maxLength !== undefined && (
+        <div className="pointer-events-none absolute bottom-2 right-3 font-mono text-[11px]">
+          <span
+            className={cn(
+              value.length > maxLength
+                ? "text-destructive"
+                : "text-muted-foreground",
+            )}
+          >
+            {value.length}
+          </span>
+          <span className="text-muted-foreground">/{maxLength}</span>
+        </div>
+      )}
     </div>
   );
 }

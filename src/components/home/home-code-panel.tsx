@@ -16,6 +16,7 @@ const AUTO_VALUE = "__auto__";
 
 const DETECT_DEBOUNCE_MS = 200;
 const HIGHLIGHT_DEBOUNCE_MS = 120;
+const MAX_CODE_LENGTH = 2000;
 
 export function HomeCodePanel() {
   const [code, setCode] = useState(HOME_SAMPLE_CODE);
@@ -63,6 +64,8 @@ export function HomeCodePanel() {
   const autoHint =
     manualLanguage === null ? getEditorEntry(detectedLanguage).label : null;
 
+  const isOverLimit = code.length > MAX_CODE_LENGTH;
+
   return (
     <div className="mx-auto flex w-full max-w-[780px] flex-col gap-4">
       <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
@@ -109,11 +112,16 @@ export function HomeCodePanel() {
         </div>
         <CodeEditor
           highlightHtml={highlightHtml}
+          maxLength={MAX_CODE_LENGTH}
           onChange={setCode}
           value={code}
         />
       </div>
-      <HomeActions code={code} resolvedLanguage={resolvedLanguage} />
+      <HomeActions
+        code={code}
+        isOverLimit={isOverLimit}
+        resolvedLanguage={resolvedLanguage}
+      />
     </div>
   );
 }
