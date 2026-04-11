@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeCodePanel } from "@/components/home/home-code-panel";
+import { MetricsSection } from "@/components/home/metrics-section";
 import {
   LeaderboardRowCode,
   LeaderboardRowCodeLine,
@@ -18,7 +19,6 @@ import {
   HOME_LEADERBOARD_TITLE_PROMPT,
   HOME_LEADERBOARD_TITLE_REST,
   HOME_LEADERBOARD_VIEW_ALL,
-  HOME_STATS_LINE,
   LEADERBOARD_PREVIEW_ROWS,
 } from "@/lib/home-static";
 
@@ -39,9 +39,7 @@ export default async function Home() {
 
           <HomeCodePanel />
 
-          <p className="text-center font-mono text-muted-foreground text-xs">
-            {HOME_STATS_LINE}
-          </p>
+          <MetricsSection />
 
           <section className="flex flex-col gap-6">
             <div className="flex flex-wrap items-center justify-between gap-4">

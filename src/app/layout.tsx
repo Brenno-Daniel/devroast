@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import { SiteHeader } from "@/components/site-header";
+import { TRPCReactProvider } from "@/trpc/client";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({
@@ -23,8 +24,10 @@ export default function RootLayout({
   return (
     <html className={`${jetbrainsMono.variable} dark`} lang="pt-BR">
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
-        <SiteHeader />
-        {children}
+        <TRPCReactProvider>
+          <SiteHeader />
+          {children}
+        </TRPCReactProvider>
       </body>
     </html>
   );
