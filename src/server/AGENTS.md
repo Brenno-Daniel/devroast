@@ -65,3 +65,19 @@ export const exampleRouter = createTRPCRouter({
   myQuery: publicProcedure.query(() => "hello"),
 });
 ```
+
+## Performance
+
+Sempre usar `Promise.all` para executar queries em paralelo quando possível:
+
+```tsx
+// ✅ Bom - executa em paralelo
+const [users, posts] = await Promise.all([
+  db.select().from(users),
+  db.select().from(posts),
+]);
+
+// ❌ Ruim - executa sequencialmente
+const users = await db.select().from(users);
+const posts = await db.select().from(posts);
+```

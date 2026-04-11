@@ -7,21 +7,24 @@ export const statsRouter = createTRPCRouter({
   getMetrics: publicProcedure.query(async ({ ctx }) => {
     const db = ctx.db;
 
-    const countResult = await db
-      .select({ count: sql<number>`count(${submissions.id})` })
-      .from(submissions)
-      .where(eq(submissions.status, "completed"));
+    const [countResult, avgResult] = await Promise.all([
+      db
+        .select({ count: sql<number>`count(${submissions.id})` })
+        .from(submissions)
+        .where(eq(submissions.status, "completed")),
+      db
+        .select({
+          avg: sql<number>`cast(avg(${analysisResults.score}) as numeric(4,1))`,
+        })
+        .from(analysisResults)
+        .innerJoin(
+          submissions,
+          eq(analysisResults.submissionId, submissions.id),
+        )
+        .where(eq(submissions.status, "completed")),
+    ]);
 
     const totalCount = Number(countResult[0]?.count ?? 0);
-
-    const avgResult = await db
-      .select({
-        avg: sql<number>`cast(avg(${analysisResults.score}) as numeric(4,1))`,
-      })
-      .from(analysisResults)
-      .innerJoin(submissions, eq(analysisResults.submissionId, submissions.id))
-      .where(eq(submissions.status, "completed"));
-
     const avgScore = Number(avgResult[0]?.avg ?? 0);
 
     return {
