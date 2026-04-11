@@ -23,6 +23,8 @@ No fim das contas, a ideia é misturar **viralidade** (quem não gosta de ver o 
 | Syntax highlight | [Shiki](https://shiki.style) (servidor, tema Vesper) |
 | Lint / format | [Biome](https://biomejs.dev) |
 | Dados | [PostgreSQL](https://www.postgresql.org) + [Drizzle ORM](https://orm.drizzle.team) |
+| API Layer | [tRPC](https://trpc.io) (TanStack React Query) |
+| Animações | [@number-flow/react](https://number-flow.barvian.me) |
 | Estrutura de código | Diretório [`src/`](./src) (ex.: `src/app`) |
 
 ## 🛠️ Ferramentas de desenvolvimento
@@ -84,8 +86,29 @@ Para validar a ligação: `GET /api/health/db` (responde `{ "ok": true }` quando
 | `pnpm db:migrate` | Aplica migrações |
 | `pnpm db:push` | Empurra o schema para o DB (desenvolvimento) |
 | `pnpm db:studio` | Abre o Drizzle Studio |
+| `pnpm db:seed` | Popula o banco com dados de exemplo |
 
-## 📚 Saiba mais
+## 🔧 tRPC API
+
+O projeto usa tRPC como camada de API com tipagem end-to-end.
+
+### Endpoints disponíveis
+
+- `stats.getMetrics` — Retorna métricas (total de roasts, score médio)
+
+### Estrutura
+
+- Backend: `src/server/trpc/` — Routers e procedimentos
+- Client: `src/trpc/` — Provider e utilitários
+- API Route: `src/app/api/trpc/[trpc]/route.ts`
+
+Para mais detalhes, ver [`src/server/AGENTS.md`](./src/server/AGENTS.md).
+
+## 📋 Specs
+
+Antes de implementar novas features, criar especificação em `specs/`. Ver [`specs/AGENTS.md`](./specs/AGENTS.md) para formato.
+
+## 📚 Docs & Referências
 
 - [Documentação Next.js](https://nextjs.org/docs)
 - [Next.js Learn](https://nextjs.org/learn)
