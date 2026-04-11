@@ -7,6 +7,7 @@ import {
   Badge,
   Button,
   CodeBlock,
+  CodeBlockHeader,
   DiffLine,
   LeaderboardRowCode,
   LeaderboardRowLanguage,
@@ -169,11 +170,10 @@ export default function ComponentsShowcasePage() {
           <p className="max-w-xl font-mono text-muted-foreground text-xs">
             Shiki with Vesper theme, rendered on the server (Server Component).
           </p>
-          <CodeBlock
-            code={SAMPLE_JS}
-            filename="calculate.js"
-            lang="javascript"
-          />
+          <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
+            <CodeBlockHeader filename="calculate.js" />
+            <CodeBlock code={SAMPLE_JS} lang="javascript" />
+          </div>
         </section>
 
         <section className="flex flex-col gap-6">

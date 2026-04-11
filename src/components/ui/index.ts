@@ -11,6 +11,10 @@ export {
 export { Badge, type BadgeProps, badgeVariants } from "./badge";
 export { Button, type ButtonProps, buttonVariants } from "./button";
 export { CodeBlock, type CodeBlockProps } from "./code-block";
+export {
+  CodeBlockHeader,
+  type CodeBlockHeaderProps,
+} from "./code-block-header";
 export { DiffLine, type DiffLineProps, diffLineVariants } from "./diff-line";
 export {
   LeaderboardRowCode,
