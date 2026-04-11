@@ -1,25 +1,14 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { HomeCodePanel } from "@/components/home/home-code-panel";
 import { MetricsSection } from "@/components/home/metrics-section";
-import {
-  LeaderboardRowCode,
-  LeaderboardRowCodeLine,
-  LeaderboardRowLanguage,
-  LeaderboardRowRank,
-  LeaderboardRowRoot,
-  LeaderboardRowScore,
-} from "@/components/ui";
+import { HomeLeaderboardSection } from "@/components/home/home-leaderboard-section";
+import { HomeLeaderboardSkeleton } from "@/components/home/home-leaderboard-skeleton";
 import {
   HOME_HERO_SUBTITLE,
   HOME_HERO_TITLE_PROMPT,
   HOME_HERO_TITLE_REST,
-  HOME_LEADERBOARD_FOOTER_LINK_LABEL,
-  HOME_LEADERBOARD_FOOTER_PREFIX,
-  HOME_LEADERBOARD_SUBTITLE,
-  HOME_LEADERBOARD_TITLE_PROMPT,
-  HOME_LEADERBOARD_TITLE_REST,
   HOME_LEADERBOARD_VIEW_ALL,
-  LEADERBOARD_PREVIEW_ROWS,
 } from "@/lib/home-static";
 
 export default async function Home() {
@@ -44,12 +33,8 @@ export default async function Home() {
           <section className="flex flex-col gap-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h2 className="flex flex-wrap items-center gap-2 font-mono font-bold text-sm">
-                <span className="text-emerald-500">
-                  {HOME_LEADERBOARD_TITLE_PROMPT}
-                </span>
-                <span className="text-foreground">
-                  {HOME_LEADERBOARD_TITLE_REST}
-                </span>
+                <span className="text-emerald-500">{"//"}</span>
+                <span className="text-foreground">shame_leaderboard</span>
               </h2>
               <Link
                 className="rounded-md border border-border px-3 py-1.5 font-mono text-muted-foreground text-xs no-underline transition-colors hover:bg-white/5 hover:text-foreground"
@@ -59,51 +44,12 @@ export default async function Home() {
               </Link>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              {HOME_LEADERBOARD_SUBTITLE}
+              {"// the worst code on the internet, ranked by shame"}
             </p>
 
-            <div className="overflow-hidden rounded-md border border-border">
-              <div className="grid grid-cols-[50px_70px_1fr_100px] items-center border-border border-b bg-[#0F0F0F] px-5 py-2.5 font-mono text-muted-foreground text-xs">
-                <span className="font-medium">#</span>
-                <span className="font-medium">score</span>
-                <span className="font-medium">code</span>
-                <span className="text-right font-medium">lang</span>
-              </div>
-              {LEADERBOARD_PREVIEW_ROWS.map((row) => (
-                <LeaderboardRowRoot className="items-start" key={row.rank}>
-                  <LeaderboardRowRank
-                    className={
-                      row.rank === "1"
-                        ? "text-amber-500"
-                        : "text-muted-foreground"
-                    }
-                  >
-                    {row.rank}
-                  </LeaderboardRowRank>
-                  <LeaderboardRowScore>{row.score}</LeaderboardRowScore>
-                  <LeaderboardRowCode>
-                    {row.codeLines.map((line) => (
-                      <LeaderboardRowCodeLine key={line}>
-                        {line}
-                      </LeaderboardRowCodeLine>
-                    ))}
-                  </LeaderboardRowCode>
-                  <LeaderboardRowLanguage>
-                    {row.language}
-                  </LeaderboardRowLanguage>
-                </LeaderboardRowRoot>
-              ))}
-            </div>
-
-            <p className="text-center font-mono text-[13px] text-muted-foreground">
-              {HOME_LEADERBOARD_FOOTER_PREFIX}
-              <Link
-                className="font-mono text-[13px] text-muted-foreground no-underline transition-colors hover:text-foreground"
-                href="/leaderboard"
-              >
-                {HOME_LEADERBOARD_FOOTER_LINK_LABEL}
-              </Link>
-            </p>
+            <Suspense fallback={<HomeLeaderboardSkeleton />}>
+              <HomeLeaderboardSection />
+            </Suspense>
           </section>
         </div>
       </div>
