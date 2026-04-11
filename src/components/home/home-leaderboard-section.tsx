@@ -1,19 +1,17 @@
-import Link from "next/link";
-import {
-  LeaderboardRowCode,
-  LeaderboardRowCodeLine,
-  LeaderboardRowLanguage,
-  LeaderboardRowRank,
-  LeaderboardRowRoot,
-  LeaderboardRowScore,
-} from "@/components/ui";
+import { highlightCode } from "@/lib/highlight-code";
+import { CodeBlockCollapsible } from "@/components/ui";
 import { getCaller } from "@/trpc/server";
 
 export async function HomeLeaderboardSection() {
   const caller = await getCaller();
   const data = await caller.leaderboard.getHomeLeaderboard();
 
-  const codeLines = (code: string) => code.split("\n").slice(0, 3);
+  const highlightItems = await Promise.all(
+    data.items.map(async (item) => ({
+      ...item,
+      highlightHtml: await highlightCode(item.codeText, item.language),
+    })),
+  );
 
   return (
     <div className="overflow-hidden rounded-md border border-border">
@@ -23,33 +21,37 @@ export async function HomeLeaderboardSection() {
         <span className="font-medium">code</span>
         <span className="text-right font-medium">lang</span>
       </div>
-      {data.items.map((item, index) => (
-        <LeaderboardRowRoot className="items-start" key={item.submissionId}>
-          <LeaderboardRowRank
-            className={index === 0 ? "text-amber-500" : "text-muted-foreground"}
-          >
-            {index + 1}
-          </LeaderboardRowRank>
-          <LeaderboardRowScore>{item.score}</LeaderboardRowScore>
-          <LeaderboardRowCode>
-            {codeLines(item.codeText).map((line, idx) => (
-              <LeaderboardRowCodeLine key={idx}>{line}</LeaderboardRowCodeLine>
-            ))}
-          </LeaderboardRowCode>
-          <LeaderboardRowLanguage>{item.language}</LeaderboardRowLanguage>
-        </LeaderboardRowRoot>
+      {highlightItems.map((item, index) => (
+        <div
+          key={item.submissionId}
+          className="flex items-start border-b border-border bg-input px-5 py-4 last:border-b-0"
+        >
+          <div className="grid w-full grid-cols-[50px_70px_1fr_100px] items-start gap-4">
+            <div
+              className={
+                index === 0
+                  ? "font-mono text-sm font-medium text-amber-500"
+                  : "font-mono text-sm font-medium text-muted-foreground"
+              }
+            >
+              {index + 1}
+            </div>
+            <div className="font-mono text-sm text-muted-foreground">
+              {item.score}
+            </div>
+            <div>
+              <CodeBlockCollapsible
+                code={item.codeText}
+                lang={item.language}
+                highlightHtml={item.highlightHtml}
+              />
+            </div>
+            <div className="font-mono text-xs text-muted-foreground">
+              {item.language}
+            </div>
+          </div>
+        </div>
       ))}
-      <div className="flex items-center justify-center py-3">
-        <p className="text-center font-mono text-[13px] text-muted-foreground">
-          showing top 3 of {data.total.toLocaleString()} ·{" "}
-          <Link
-            className="no-underline transition-colors hover:text-foreground"
-            href="/leaderboard"
-          >
-            view full leaderboard &gt;&gt;
-          </Link>
-        </p>
-      </div>
     </div>
   );
 }

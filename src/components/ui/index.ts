@@ -12,6 +12,10 @@ export { Badge, type BadgeProps, badgeVariants } from "./badge";
 export { Button, type ButtonProps, buttonVariants } from "./button";
 export { CodeBlock, type CodeBlockProps } from "./code-block";
 export {
+  CodeBlockCollapsible,
+  type CodeBlockCollapsibleProps,
+} from "./code-block-collapsible";
+export {
   CodeBlockHeader,
   type CodeBlockHeaderProps,
 } from "./code-block-header";
