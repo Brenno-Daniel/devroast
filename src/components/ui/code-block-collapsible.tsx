@@ -22,8 +22,11 @@ export function CodeBlockCollapsible({
     <div className={className}>
       <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
         <div
-          className="overflow-x-auto [&_code]:font-mono [&_pre]:m-0 [&_pre]:bg-transparent [&_pre]:p-3 [&_pre]:font-mono [&_pre]:text-[13px] [&_pre]:leading-relaxed"
-          style={{ maxHeight: open ? "none" : "160px" }}
+          className="[&_code]:font-mono [&_pre]:m-0 [&_pre]:bg-transparent [&_pre]:p-3 [&_pre]:font-mono [&_pre]:text-[13px] [&_pre]:leading-relaxed"
+          style={{
+            maxHeight: open ? "none" : "160px",
+            overflow: open ? "visible" : "hidden",
+          }}
           // biome-ignore lint/security/noDangerouslySetInnerHtml: Shiki returns sanitized HTML with theme colors
           dangerouslySetInnerHTML={{ __html: highlightHtml }}
         />
