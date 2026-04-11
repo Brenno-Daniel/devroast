@@ -8,7 +8,7 @@ App Next.js: o utilizador cola código e recebe feedback (roast mode vs feedback
 
 ## Stack
 
-Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Biome, **@base-ui/react** (primitivos interativos), **Shiki** (highlight no servidor, tema Vesper).
+Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Biome, **@base-ui/react** (primitivos interativos), **Shiki** (highlight no servidor, tema Vesper), **tRPC** (API layer), **@number-flow/react** (animated numbers).
 
 ## Convenções globais
 
@@ -25,4 +25,12 @@ Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, Biome, **@base-u
 
 ## Componentes de interface
 
-Padrões, exports e convenções para `src/components/ui` estão documentados em **[`src/components/ui/AGENTS.md`](src/components/ui/AGENTS.md)** (mantido junto ao código da biblioteca de componentes).
+Padrões, exports e convenções para `src/components/ui` estão documentados em **[`src/components/ui/AGENTS.md`](src/components/ui/AGENTS.md)**.
+
+## tRPC / Backend
+
+Padrões para API e Server Components estão documentados em **[`src/server/AGENTS.md`](src/server/AGENTS.md)**.
+
+## Especificações (Specs)
+
+Padrão para criar especificações antes de implementar features está em **[`specs/AGENTS.md`](specs/AGENTS.md)**.
