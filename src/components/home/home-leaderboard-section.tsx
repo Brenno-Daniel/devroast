@@ -24,9 +24,9 @@ export async function HomeLeaderboardSection() {
       {highlightItems.map((item, index) => (
         <div
           key={item.submissionId}
-          className="flex items-start border-b border-border bg-input px-5 py-4 last:border-b-0"
+          className="flex items-start overflow-hidden border-b border-border bg-input px-5 py-4 last:border-b-0"
         >
-          <div className="grid w-full grid-cols-[50px_70px_1fr_100px] items-start gap-4">
+          <div className="grid w-full min-w-0 grid-cols-[50px_70px_1fr_100px] items-start gap-4">
             <div
               className={
                 index === 0
@@ -39,11 +39,12 @@ export async function HomeLeaderboardSection() {
             <div className="font-mono text-sm text-muted-foreground">
               {item.score}
             </div>
-            <div>
+            <div className="min-w-0">
               <CodeBlockCollapsible
                 code={item.codeText}
                 lang={item.language}
                 highlightHtml={item.highlightHtml}
+                className="w-full"
               />
             </div>
             <div className="font-mono text-xs text-muted-foreground">
