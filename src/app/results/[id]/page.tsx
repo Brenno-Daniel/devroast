@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   AnalysisCardRoot,
   AnalysisCardHeader,
@@ -37,16 +36,11 @@ export default async function ResultsPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  void id;
   const data = RESULT_DATA;
 
-  const getVerdictColor = (verdict: string) => {
-    switch (verdict) {
-      case "needs_serious_help":
-        return "bg-red-500/10 text-red-500 border-red-500/20";
-      default:
-        return "bg-amber-500/10 text-amber-500 border-amber-500/20";
-    }
-  };
+  const getVerdictColor = (verdict: string) =>
+    verdict === "needs_serious_help" ? "text-red-500" : "text-amber-500";
 
   const getIssueVariant = (severity: string) => {
     switch (severity) {
@@ -71,26 +65,6 @@ export default async function ResultsPage({
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="flex h-14 w-full items-center justify-between border-b border-border bg-background px-10">
-        <Link
-          className="flex items-center gap-2 font-mono no-underline"
-          href="/"
-        >
-          <span className="font-bold text-emerald-500 text-xl leading-none">
-            &gt;
-          </span>
-          <span className="font-medium text-[18px] text-foreground leading-none">
-            devroast
-          </span>
-        </Link>
-        <Link
-          className="font-mono text-[13px] text-muted-foreground no-underline transition-colors hover:text-foreground"
-          href="/leaderboard"
-        >
-          leaderboard
-        </Link>
-      </header>
-
       <div className="mx-auto w-full max-w-[1440px] px-20 py-10">
         <section className="mb-10 flex items-center gap-12">
           <div className="relative flex h-[180px] w-[180px] items-center justify-center">
@@ -108,11 +82,10 @@ export default async function ResultsPage({
           </div>
 
           <div className="flex flex-col gap-4">
-            <div
-              className={`inline-flex w-fit items-center gap-2 rounded-full border px-3 py-1.5 ${getVerdictColor(data.verdict)}`}
-            >
-              <span className="size-2 rounded-full bg-current" />
-              <span className="font-mono text-sm font-medium">
+            <div className="flex items-center gap-2">
+              <span
+                className={`font-mono text-sm font-medium ${getVerdictColor(data.verdict)}`}
+              >
                 verdict: {data.verdict}
               </span>
             </div>
@@ -123,6 +96,14 @@ export default async function ResultsPage({
               <span>lang: {data.language}</span>
               <span>·</span>
               <span>{data.lines} lines</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <button
+                className="flex items-center gap-2 rounded border border-border px-4 py-2 font-mono text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
+                type="button"
+              >
+                share_roast
+              </button>
             </div>
           </div>
         </section>
