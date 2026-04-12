@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getCaller } from "@/trpc/server";
+import { highlightCode } from "@/lib/highlight-code";
 import {
   LeaderboardRowCode,
   LeaderboardRowCodeLine,
@@ -7,9 +9,8 @@ import {
   LeaderboardRowRoot,
   LeaderboardRowScore,
 } from "@/components/ui";
+import { CodeBlockCollapsible } from "@/components/ui";
 import {
-  LEADERBOARD_ENTRIES,
-  LEADERBOARD_STATS,
   LEADERBOARD_SUBTITLE,
   LEADERBOARD_TITLE_PROMPT,
   LEADERBOARD_TITLE_REST,
@@ -21,7 +22,17 @@ export const metadata: Metadata = {
     "The most roasted code on the internet - see the worst submissions ranked by shame score.",
 };
 
-export default function LeaderboardPage() {
+export default async function LeaderboardPage() {
+  const caller = await getCaller();
+  const data = await caller.leaderboard.getLeaderboard();
+
+  const highlightItems = await Promise.all(
+    data.items.map(async (item) => ({
+      ...item,
+      highlightHtml: await highlightCode(item.codeText, item.language),
+    })),
+  );
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1440px] px-20 py-10">
@@ -38,9 +49,9 @@ export default function LeaderboardPage() {
             {LEADERBOARD_SUBTITLE}
           </p>
           <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
-            <span>{LEADERBOARD_STATS.totalSubmissions} submissions</span>
+            <span>{data.total} submissions</span>
             <span>·</span>
-            <span>avg score: {LEADERBOARD_STATS.avgScore}/10</span>
+            <span>avg score: {data.avgScore}/10</span>
           </div>
         </section>
 
@@ -52,9 +63,9 @@ export default function LeaderboardPage() {
             <span className="text-right font-medium">lang</span>
           </div>
 
-          {LEADERBOARD_ENTRIES.map((entry) => (
+          {highlightItems.map((item, index) => (
             <div
-              key={entry.rank}
+              key={item.submissionId}
               className="flex flex-col overflow-hidden rounded-md border border-border"
             >
               <div className="flex items-center justify-between border-border border-b bg-surface px-5 py-3">
@@ -62,35 +73,36 @@ export default function LeaderboardPage() {
                   <LeaderboardRowRoot className="flex items-center gap-3">
                     <LeaderboardRowRank
                       className={
-                        entry.rank === 1
+                        index === 0
                           ? "font-mono text-sm font-medium text-amber-500"
                           : "font-mono text-sm font-medium text-muted-foreground"
                       }
                     >
-                      {entry.rank}
+                      {index + 1}
                     </LeaderboardRowRank>
                     <LeaderboardRowScore className="font-mono text-sm text-muted-foreground">
-                      {entry.score}
+                      {item.score}
                     </LeaderboardRowScore>
                   </LeaderboardRowRoot>
                 </div>
                 <div className="flex items-center gap-4">
                   <span className="font-mono text-[11px] uppercase text-muted-foreground">
-                    {entry.mode}
+                    {item.mode}
                   </span>
                 </div>
               </div>
               <div className="bg-input px-5 py-4">
-                <LeaderboardRowCode className="font-mono text-[13px] text-foreground">
-                  {entry.codeText.split("\n").map((line, idx) => (
-                    <LeaderboardRowCodeLine key={idx}>
-                      {line}
-                    </LeaderboardRowCodeLine>
-                  ))}
-                </LeaderboardRowCode>
+                <div className="min-w-0">
+                  <CodeBlockCollapsible
+                    code={item.codeText}
+                    lang={item.language}
+                    highlightHtml={item.highlightHtml}
+                    className="w-full"
+                  />
+                </div>
                 <div className="mt-3 flex justify-end">
                   <LeaderboardRowLanguage className="font-mono text-xs text-muted-foreground">
-                    {entry.language}
+                    {item.language}
                   </LeaderboardRowLanguage>
                 </div>
               </div>
