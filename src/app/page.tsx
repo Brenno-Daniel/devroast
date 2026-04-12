@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { HomeCodePanel } from "@/components/home/home-code-panel";
 import { MetricsSection } from "@/components/home/metrics-section";
 import { HomeLeaderboardSection } from "@/components/home/home-leaderboard-section";
-import { HomeLeaderboardSkeleton } from "@/components/home/home-leaderboard-skeleton";
 import {
   HOME_HERO_SUBTITLE,
   HOME_HERO_TITLE_PROMPT,
@@ -47,9 +45,7 @@ export default async function Home() {
               {"// the worst code on the internet, ranked by shame"}
             </p>
 
-            <Suspense fallback={<HomeLeaderboardSkeleton />}>
-              <HomeLeaderboardSection />
-            </Suspense>
+            <HomeLeaderboardSection />
           </section>
         </div>
       </div>

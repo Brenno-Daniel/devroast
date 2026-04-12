@@ -1,8 +1,9 @@
 import { highlightCode } from "@/lib/highlight-code";
 import { CodeBlockCollapsible } from "@/components/ui";
 import { getCaller } from "@/trpc/server";
+import { Suspense } from "react";
 
-export async function HomeLeaderboardSection() {
+async function HomeLeaderboardContent() {
   const caller = await getCaller();
   const data = await caller.leaderboard.getHomeLeaderboard();
 
@@ -50,6 +51,43 @@ export async function HomeLeaderboardSection() {
             <div className="font-mono text-xs text-muted-foreground">
               {item.language}
             </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function HomeLeaderboardSection() {
+  return (
+    <Suspense fallback={<HomeLeaderboardSkeleton />}>
+      <HomeLeaderboardContent />
+    </Suspense>
+  );
+}
+
+function HomeLeaderboardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-md border border-border">
+      <div className="grid grid-cols-[50px_70px_1fr_100px] items-center border-border border-b bg-[#0F0F0F] px-5 py-2.5 font-mono text-muted-foreground text-xs">
+        <span className="font-medium">#</span>
+        <span className="font-medium">score</span>
+        <span className="font-medium">code</span>
+        <span className="text-right font-medium">lang</span>
+      </div>
+      {[1, 2, 3].map((i) => (
+        <div
+          key={i}
+          className="flex items-start overflow-hidden border-b border-border bg-input px-5 py-4 last:border-b-0"
+        >
+          <div className="grid w-full min-w-0 grid-cols-[50px_70px_1fr_100px] items-start gap-4">
+            <div className="h-4 w-6 animate-pulse rounded bg-muted" />
+            <div className="h-4 w-8 animate-pulse rounded bg-muted" />
+            <div className="flex flex-col gap-1">
+              <div className="h-4 w-32 animate-pulse rounded bg-muted" />
+              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            </div>
+            <div className="h-4 w-12 animate-pulse rounded bg-muted" />
           </div>
         </div>
       ))}
