@@ -1,4 +1,4 @@
-export function LeaderboardLoading() {
+export default function LeaderboardLoading() {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1440px] px-20 py-10">
