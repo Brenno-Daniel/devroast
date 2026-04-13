@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/switch";
 import type { EditorLanguageId } from "@/lib/editor-languages";
 import { HOME_ROAST_HINT, HOME_SUBMIT_LABEL } from "@/lib/home-static";
-import { useTRPC } from "@/trpc/client";
 
 export type HomeActionsProps = {
   code: string;
@@ -26,25 +25,33 @@ export function HomeActions({
   const [roastMode, setRoastMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const trpc = useTRPC();
 
-  const submitMutation = trpc.submit.submit.useMutation({
-    onSuccess: (data) => {
-      router.push(`/results/${data.submissionId}`);
-    },
-    onError: () => {
-      setIsLoading(false);
-    },
-  });
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isOverLimit || isLoading) return;
     setIsLoading(true);
-    submitMutation.mutate({
-      code,
-      language: resolvedLanguage,
-      mode: roastMode ? "roast" : "straight",
-    });
+
+    try {
+      const response = await fetch("/api/trpc/submit.submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          language: resolvedLanguage,
+          mode: roastMode ? "roast" : "straight",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.result?.data?.json?.submissionId) {
+        router.push(`/results/${data.result.data.json.submissionId}`);
+      } else {
+        throw new Error("Failed to submit");
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
