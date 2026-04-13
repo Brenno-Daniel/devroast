@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   SwitchFieldControl,
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/switch";
 import type { EditorLanguageId } from "@/lib/editor-languages";
 import { HOME_ROAST_HINT, HOME_SUBMIT_LABEL } from "@/lib/home-static";
+import { useTRPC } from "@/trpc/client";
 
 export type HomeActionsProps = {
   code: string;
@@ -22,9 +24,28 @@ export function HomeActions({
   resolvedLanguage,
 }: HomeActionsProps) {
   const [roastMode, setRoastMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const trpc = useTRPC();
 
-  void code;
-  void resolvedLanguage;
+  const submitMutation = trpc.submit.submit.useMutation({
+    onSuccess: (data) => {
+      router.push(`/results/${data.submissionId}`);
+    },
+    onError: () => {
+      setIsLoading(false);
+    },
+  });
+
+  const handleSubmit = () => {
+    if (isOverLimit || isLoading) return;
+    setIsLoading(true);
+    submitMutation.mutate({
+      code,
+      language: resolvedLanguage,
+      mode: roastMode ? "roast" : "straight",
+    });
+  };
 
   return (
     <div className="flex w-full max-w-[780px] flex-wrap items-center justify-between gap-4">
@@ -33,6 +54,7 @@ export function HomeActions({
           <SwitchFieldControl
             checked={roastMode}
             onCheckedChange={setRoastMode}
+            disabled={isLoading}
           />
           <SwitchFieldLabel>roast mode</SwitchFieldLabel>
         </SwitchFieldRoot>
@@ -40,8 +62,15 @@ export function HomeActions({
           {HOME_ROAST_HINT}
         </span>
       </div>
-      <Button disabled={isOverLimit} size="md" type="button" variant="default">
-        {HOME_SUBMIT_LABEL}
+      <Button
+        disabled={isOverLimit || isLoading}
+        size="md"
+        type="button"
+        variant="default"
+        onClick={handleSubmit}
+        className={isLoading ? "animate-pulse" : ""}
+      >
+        {isLoading ? "roasting code..." : HOME_SUBMIT_LABEL}
       </Button>
     </div>
   );
