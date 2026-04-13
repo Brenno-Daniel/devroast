@@ -35,9 +35,11 @@ export function HomeActions({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          code,
-          language: resolvedLanguage,
-          mode: roastMode ? "roast" : "straight",
+          json: {
+            code,
+            language: resolvedLanguage,
+            mode: roastMode ? "roast" : "straight",
+          },
         }),
       });
 
@@ -45,11 +47,14 @@ export function HomeActions({
 
       if (data.result?.data?.json?.submissionId) {
         router.push(`/results/${data.result.data.json.submissionId}`);
+      } else if (data.error) {
+        throw new Error(data.error.message || "Failed to submit");
       } else {
-        throw new Error("Failed to submit");
+        throw new Error("Unexpected response");
       }
     } catch (error) {
       console.error("Submit error:", error);
+      alert("Error submitting code. Please try again.");
       setIsLoading(false);
     }
   };
