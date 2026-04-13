@@ -21,7 +21,7 @@ import {
   RESULTS_TITLE_REST,
 } from "@/lib/results-static";
 
-export const dynamicParams = true;
+export const fetchCache = "default-no-store";
 
 export function generateStaticParams() {
   return [{ id: "placeholder" }];
