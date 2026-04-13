@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getCaller } from "@/trpc/server";
 import { highlightCode } from "@/lib/highlight-code";
+import { cacheLife } from "next/cache";
 import {
   LeaderboardRowCode,
   LeaderboardRowCodeLine,
@@ -23,6 +24,9 @@ export const metadata: Metadata = {
 };
 
 export default async function LeaderboardPage() {
+  "use cache";
+  cacheLife("hours");
+
   const caller = await getCaller();
   const data = await caller.leaderboard.getLeaderboard();
 

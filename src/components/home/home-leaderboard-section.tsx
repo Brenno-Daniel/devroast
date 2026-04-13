@@ -2,8 +2,12 @@ import { highlightCode } from "@/lib/highlight-code";
 import { CodeBlockCollapsible } from "@/components/ui";
 import { getCaller } from "@/trpc/server";
 import { Suspense } from "react";
+import { cacheLife } from "next/cache";
 
 async function HomeLeaderboardContent() {
+  "use cache";
+  cacheLife("hours");
+
   const caller = await getCaller();
   const data = await caller.leaderboard.getHomeLeaderboard();
 
