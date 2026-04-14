@@ -1,7 +1,6 @@
-import { z } from "zod";
-import { publicProcedure, createTRPCRouter } from "../init";
-import { submissions, analysisResults } from "@/db/schema";
-import { sql, eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
+import { analysisResults, submissions } from "@/db/schema";
+import { createTRPCRouter, publicProcedure } from "../init";
 
 export const statsRouter = createTRPCRouter({
   getMetrics: publicProcedure.query(async ({ ctx }) => {

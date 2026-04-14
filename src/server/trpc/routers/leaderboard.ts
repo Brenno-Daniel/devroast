@@ -1,7 +1,7 @@
-import { publicProcedure, createTRPCRouter } from "../init";
+import { asc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { submissions, analysisResults } from "@/db/schema";
-import { sql, eq, asc } from "drizzle-orm";
+import { analysisResults, submissions } from "@/db/schema";
+import { createTRPCRouter, publicProcedure } from "../init";
 
 export const leaderboardRouter = createTRPCRouter({
   getHomeLeaderboard: publicProcedure.query(async () => {

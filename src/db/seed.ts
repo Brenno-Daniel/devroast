@@ -1,7 +1,9 @@
-import { config } from "dotenv";
 import { faker } from "@faker-js/faker";
+import { config } from "dotenv";
 
 config({ path: ".env.local" });
+
+import { eq } from "drizzle-orm";
 import { getDb } from "./index";
 import {
   analysisIssues,
@@ -9,7 +11,6 @@ import {
   submissions,
   suggestedFixes,
 } from "./schema";
-import { eq } from "drizzle-orm";
 
 const LANGUAGES = [
   "javascript",

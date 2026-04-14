@@ -1,8 +1,8 @@
-import { highlightCode } from "@/lib/highlight-code";
-import { CodeBlockCollapsible } from "@/components/ui";
-import { getCaller } from "@/trpc/server";
-import { Suspense } from "react";
 import { cacheLife } from "next/cache";
+import { Suspense } from "react";
+import { CodeBlockCollapsible } from "@/components/ui";
+import { highlightCode } from "@/lib/highlight-code";
+import { getCaller } from "@/trpc/server";
 
 async function HomeLeaderboardContent() {
   "use cache";

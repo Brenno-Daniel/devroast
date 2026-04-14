@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
-import { getCaller } from "@/trpc/server";
-import { highlightCode } from "@/lib/highlight-code";
 import { cacheLife } from "next/cache";
 import {
-  LeaderboardRowCode,
-  LeaderboardRowCodeLine,
+  CodeBlockCollapsible,
   LeaderboardRowLanguage,
   LeaderboardRowRank,
   LeaderboardRowRoot,
   LeaderboardRowScore,
 } from "@/components/ui";
-import { CodeBlockCollapsible } from "@/components/ui";
+import { highlightCode } from "@/lib/highlight-code";
 import {
   LEADERBOARD_SUBTITLE,
   LEADERBOARD_TITLE_PROMPT,
   LEADERBOARD_TITLE_REST,
 } from "@/lib/leaderboard-static";
+import { getCaller } from "@/trpc/server";
 
 export const metadata: Metadata = {
   title: "Shame Leaderboard | Devroast",

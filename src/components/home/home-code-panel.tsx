@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { CodeBlockHeader } from "@/components/ui";
 import { highlightForEditor } from "@/lib/client-highlighter";
 import { detectEditorLanguage } from "@/lib/detect-code-language";
 import {
@@ -9,7 +10,6 @@ import {
   getEditorEntry,
 } from "@/lib/editor-languages";
 import { HOME_CODE_FILENAME, HOME_SAMPLE_CODE } from "@/lib/home-static";
-import { CodeBlockHeader } from "@/components/ui";
 import { CodeEditor } from "./code-editor";
 import { HomeActions } from "./home-actions";
 

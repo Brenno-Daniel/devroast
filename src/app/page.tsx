@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { HomeCodePanel } from "@/components/home/home-code-panel";
-import { MetricsSection } from "@/components/home/metrics-section";
 import { HomeLeaderboardSection } from "@/components/home/home-leaderboard-section";
+import { MetricsSection } from "@/components/home/metrics-section";
 import {
   HOME_HERO_SUBTITLE,
   HOME_HERO_TITLE_PROMPT,

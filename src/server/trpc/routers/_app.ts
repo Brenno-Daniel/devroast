@@ -1,6 +1,6 @@
 import { createTRPCRouter } from "../init";
-import { statsRouter } from "./stats";
 import { leaderboardRouter } from "./leaderboard";
+import { statsRouter } from "./stats";
 import { submitRouter } from "./submit";
 
 export const appRouter = createTRPCRouter({

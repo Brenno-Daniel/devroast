@@ -1,17 +1,18 @@
-import type { Metadata } from "next";
-import { getDb } from "@/db";
-import { submissions, analysisResults } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import type { Metadata } from "next";
+import { cacheLife, Suspense } from "react";
 import {
-  AnalysisCardRoot,
-  AnalysisCardHeader,
-  AnalysisCardTitle,
   AnalysisCardDescription,
+  AnalysisCardHeader,
+  AnalysisCardRoot,
+  AnalysisCardTitle,
   Badge,
   CodeBlock,
   CodeBlockHeader,
   DiffLine,
 } from "@/components/ui";
+import { getDb } from "@/db";
+import { analysisResults, submissions } from "@/db/schema";
 import {
   ANALYSIS_TITLE_PROMPT,
   ANALYSIS_TITLE_REST,
@@ -20,8 +21,6 @@ import {
   RESULTS_TITLE_PROMPT,
   RESULTS_TITLE_REST,
 } from "@/lib/results-static";
-
-export const fetchCache = "default-no-store";
 
 export function generateStaticParams() {
   return [{ id: "placeholder" }];
@@ -32,15 +31,12 @@ export const metadata: Metadata = {
   description: "Your code analysis results with detailed feedback.",
 };
 
-export default async function ResultsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+async function ResultsContent({ id }: { id: string }) {
+  "use cache";
+  cacheLife("minutes");
 
   const db = getDb();
-  const result = await db
+  const results = await db
     .select({
       submissionId: submissions.id,
       codeText: submissions.codeText,
@@ -56,7 +52,9 @@ export default async function ResultsPage({
       eq(analysisResults.submissionId, submissions.id),
     )
     .where(eq(submissions.id, id))
-    .get();
+    .limit(1);
+
+  const result = results[0];
 
   if (!result) {
     return (
@@ -118,113 +116,62 @@ export default async function ResultsPage({
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1440px] px-20 py-10">
-        <section className="mb-10 flex items-center gap-12">
-          <div className="relative flex h-[180px] w-[180px] items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-4 border-border" />
-            <div className="absolute inset-0 rounded-full border-4 border-destructive/30" />
-            <div className="absolute inset-0 rounded-full border-4 border-transparent [border-top-color:rgb(239,68,68)_50%] [border-right-color:rgb(245,158,11)_50%]" />
-            <span
-              className={`font-mono text-[48px] font-bold ${getScoreColor(data.score)}`}
-            >
-              {data.score}
-            </span>
-            <span className="absolute bottom-6 font-mono text-sm text-muted-foreground">
-              /10
-            </span>
-          </div>
+        <h1 className="mb-8 font-mono text-2xl">
+          {RESULTS_TITLE_PROMPT}{" "}
+          <span className="text-muted-foreground">{RESULTS_TITLE_REST}</span>
+        </h1>
 
-          <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <span
-                className={`font-mono text-sm font-medium ${getVerdictColor(data.verdict)}`}
-              >
-                verdict: {data.verdict}
-              </span>
+        <section className="mb-8">
+          <AnalysisCardRoot>
+            <AnalysisCardHeader>
+              <AnalysisCardTitle>{ANALYSIS_TITLE_PROMPT}</AnalysisCardTitle>
+              <AnalysisCardDescription>
+                {ANALYSIS_TITLE_REST}
+              </AnalysisCardDescription>
+            </AnalysisCardHeader>
+            <div className="flex flex-wrap gap-4 p-6">
+              <Badge className={getScoreColor(data.score)}>
+                {data.score}/10
+              </Badge>
+              <Badge className={getVerdictColor(data.verdict)}>
+                {data.verdict}
+              </Badge>
+              <Badge>{data.language}</Badge>
+              <Badge>{data.lines} lines</Badge>
             </div>
-            <h1 className="max-w-2xl font-mono text-xl leading-relaxed text-foreground">
-              {data.roastTitle}
-            </h1>
-            <div className="flex items-center gap-4 font-mono text-xs text-muted-foreground">
-              <span>lang: {data.language}</span>
-              <span>·</span>
-              <span>{data.lines} lines</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                className="flex items-center gap-2 rounded border border-border px-4 py-2 font-mono text-xs text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
-                type="button"
-              >
-                share_roast
-              </button>
-            </div>
-          </div>
+          </AnalysisCardRoot>
         </section>
 
-        <div className="mb-10 h-px w-full bg-border" />
-
-        <section className="mb-10 flex flex-col gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-sm font-bold text-emerald-500">
-              {RESULTS_TITLE_PROMPT}
-            </span>
-            <span className="font-mono text-sm font-bold text-foreground">
-              {RESULTS_TITLE_REST}
-            </span>
-          </div>
-          <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
-            <CodeBlockHeader filename={`snippet.${data.language}`} />
-            <div className="bg-input p-4">
-              <CodeBlock code={data.code} lang={data.language} />
+        <section className="mb-8">
+          <h2 className="mb-4 font-mono text-xl">{data.roastTitle}</h2>
+          <AnalysisCardRoot>
+            <AnalysisCardHeader>
+              <AnalysisCardTitle>Issues</AnalysisCardTitle>
+              <AnalysisCardDescription>
+                Findings from analysis
+              </AnalysisCardDescription>
+            </AnalysisCardHeader>
+            <div className="flex flex-col gap-4 p-6">
+              {data.issues.map((issue) => (
+                <Badge
+                  key={issue.title}
+                  variant={getIssueVariant(issue.severity)}
+                >
+                  {issue.severity}: {issue.title}
+                </Badge>
+              ))}
             </div>
-          </div>
+          </AnalysisCardRoot>
         </section>
 
-        <div className="mb-10 h-px w-full bg-border" />
-
-        <section className="mb-10 flex flex-col gap-6">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-sm font-bold text-emerald-500">
-              {ANALYSIS_TITLE_PROMPT}
-            </span>
-            <span className="font-mono text-sm font-bold text-foreground">
-              {ANALYSIS_TITLE_REST}
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-5">
-            {data.issues.map((issue, idx) => (
-              <AnalysisCardRoot key={idx} className="p-5">
-                <AnalysisCardHeader>
-                  <Badge variant={getIssueVariant(issue.severity)}>
-                    {issue.severity}
-                  </Badge>
-                </AnalysisCardHeader>
-                <AnalysisCardTitle>{issue.title}</AnalysisCardTitle>
-                <AnalysisCardDescription>
-                  {issue.description}
-                </AnalysisCardDescription>
-              </AnalysisCardRoot>
-            ))}
-          </div>
-        </section>
-
-        <div className="mb-10 h-px w-full bg-border" />
-
-        <section className="flex flex-col gap-6">
-          <div className="flex items-center gap-2">
-            <span className="font-mono text-sm font-bold text-emerald-500">
-              {DIFF_TITLE_PROMPT}
-            </span>
-            <span className="font-mono text-sm font-bold text-foreground">
-              {DIFF_TITLE_REST}
-            </span>
-          </div>
-          <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
-            <div className="flex h-10 items-center justify-between border-b border-border px-4">
-              <span className="font-mono text-xs text-muted-foreground">
-                your_code.ts → improved_code.ts
-              </span>
-            </div>
-            <div className="bg-input p-1">
+        <section className="mb-8">
+          <h2 className="mb-4 font-mono text-xl">
+            {DIFF_TITLE_PROMPT}{" "}
+            <span className="text-muted-foreground">{DIFF_TITLE_REST}</span>
+          </h2>
+          <CodeBlock>
+            <CodeBlockHeader>{data.language}</CodeBlockHeader>
+            <div className="flex flex-col">
               {diffLines.map((line, idx) => {
                 let variant: "added" | "removed" | "context" = "context";
                 if (line.startsWith("+")) variant = "added";
@@ -232,15 +179,37 @@ export default async function ResultsPage({
                 else if (line.startsWith("@@")) variant = "context";
 
                 return (
-                  <DiffLine key={idx} variant={variant}>
+                  <DiffLine key={line} variant={variant}>
                     {line}
                   </DiffLine>
                 );
               })}
             </div>
-          </div>
+          </CodeBlock>
         </section>
       </div>
     </main>
+  );
+}
+
+export default async function ResultsPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen bg-background text-foreground">
+          <div className="mx-auto w-full max-w-[1440px] px-20 py-10">
+            <h1 className="font-mono text-xl">Loading...</h1>
+          </div>
+        </main>
+      }
+    >
+      <ResultsContent id={id} />
+    </Suspense>
   );
 }

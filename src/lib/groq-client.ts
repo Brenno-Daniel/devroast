@@ -61,7 +61,6 @@ export const analyzeCode = cache(
         ],
         temperature: 0.7,
         max_tokens: 4000,
-        response_format: { type: "json_object" },
       }),
     });
 
@@ -73,10 +72,15 @@ export const analyzeCode = cache(
     const data = (await response.json()) as {
       choices: Array<{ message: { content: string } }>;
     };
-    const content = data.choices[0]?.message.content;
+    let content = data.choices[0]?.message.content;
     if (!content) {
       throw new Error("No response from Groq API");
     }
+
+    content = content
+      .replace(/^```json\s*/, "")
+      .replace(/\s*```$/, "")
+      .trim();
 
     try {
       return JSON.parse(content) as RoastAnalysis;
