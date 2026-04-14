@@ -1,6 +1,8 @@
 import { eq } from "drizzle-orm";
 import type { Metadata } from "next";
-import { cacheLife, Suspense } from "react";
+import { cacheLife } from "next/cache";
+import Link from "next/link";
+import { Suspense } from "react";
 import {
   AnalysisCardDescription,
   AnalysisCardHeader,
@@ -8,19 +10,10 @@ import {
   AnalysisCardTitle,
   Badge,
   CodeBlock,
-  CodeBlockHeader,
-  DiffLine,
 } from "@/components/ui";
+import { ScoreRing } from "@/components/ui/score-ring";
 import { getDb } from "@/db";
 import { analysisResults, submissions } from "@/db/schema";
-import {
-  ANALYSIS_TITLE_PROMPT,
-  ANALYSIS_TITLE_REST,
-  DIFF_TITLE_PROMPT,
-  DIFF_TITLE_REST,
-  RESULTS_TITLE_PROMPT,
-  RESULTS_TITLE_REST,
-} from "@/lib/results-static";
 
 export function generateStaticParams() {
   return [{ id: "placeholder" }];
@@ -85,11 +78,34 @@ async function ResultsContent({ id }: { id: string }) {
         description: "This is sample data - update when issues are stored",
       },
     ],
-    diff: "+// Suggested fix here\n-// Original code here",
   };
 
-  const getVerdictColor = (verdict: string) =>
-    verdict === "needs_serious_help" ? "text-red-500" : "text-amber-500";
+  const getFileName = (lang: string) => {
+    if (lang === "javascript") return "your_code.js";
+    if (lang === "typescript") return "your_code.ts";
+    return "your_code.js";
+  };
+
+  const diff = {
+    originalFile: getFileName(result.language),
+    improvedFile: "improved_code.js",
+    lines: [
+      { type: "context", content: "function calculateTotal(items) {" },
+      { type: "removed", content: "  var total = 0;" },
+      {
+        type: "removed",
+        content: "  for (var i = 0; i < items.length; i++) {",
+      },
+      { type: "removed", content: "    total = total + items[i].price;" },
+      { type: "removed", content: "  }" },
+      { type: "removed", content: "  return total;" },
+      {
+        type: "added",
+        content: "  return items.reduce((sum, item) => sum + item.price, 0);",
+      },
+      { type: "context", content: "}" },
+    ],
+  };
 
   const getIssueVariant = (severity: string) => {
     switch (severity) {
@@ -104,46 +120,74 @@ async function ResultsContent({ id }: { id: string }) {
     }
   };
 
-  const getScoreColor = (score: string) => {
-    const numScore = Number(score);
-    if (numScore <= 3) return "text-red-500";
-    if (numScore <= 6) return "text-amber-500";
-    return "text-emerald-500";
-  };
-
-  const diffLines = data.diff.split("\n");
-
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-[1440px] px-20 py-10">
-        <h1 className="mb-8 font-mono text-2xl">
-          {RESULTS_TITLE_PROMPT}{" "}
-          <span className="text-muted-foreground">{RESULTS_TITLE_REST}</span>
-        </h1>
-
-        <section className="mb-8">
-          <AnalysisCardRoot>
-            <AnalysisCardHeader>
-              <AnalysisCardTitle>{ANALYSIS_TITLE_PROMPT}</AnalysisCardTitle>
-              <AnalysisCardDescription>
-                {ANALYSIS_TITLE_REST}
-              </AnalysisCardDescription>
-            </AnalysisCardHeader>
-            <div className="flex flex-wrap gap-4 p-6">
-              <Badge className={getScoreColor(data.score)}>
-                {data.score}/10
-              </Badge>
-              <Badge className={getVerdictColor(data.verdict)}>
-                {data.verdict}
-              </Badge>
-              <Badge>{data.language}</Badge>
-              <Badge>{data.lines} lines</Badge>
+        {/* Score Hero */}
+        <section className="mb-10 flex items-center gap-12">
+          <ScoreRing score={data.score} />
+          <div className="flex flex-1 flex-col gap-4">
+            {/* Verdict Badge */}
+            <div className="flex items-center gap-2">
+              <div
+                className={`h-2 w-2 rounded-full ${
+                  data.verdict === "needs_serious_help"
+                    ? "bg-red-500"
+                    : "bg-amber-500"
+                }`}
+              />
+              <span
+                className={`font-mono text-sm font-medium ${
+                  data.verdict === "needs_serious_help"
+                    ? "text-red-500"
+                    : "text-amber-500"
+                }`}
+              >
+                verdict: {data.verdict}
+              </span>
             </div>
-          </AnalysisCardRoot>
+
+            {/* Roast Title */}
+            <p className="font-mono text-xl leading-relaxed">
+              "{data.roastTitle}"
+            </p>
+
+            {/* Meta */}
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <span>lang: {data.language}</span>
+              <span>·</span>
+              <span>{data.lines} lines</span>
+            </div>
+
+            {/* Share Button */}
+            <Link
+              href="#"
+              className="w-fit no-underline rounded-md border border-border px-4 py-2 font-mono text-sm transition-colors hover:bg-white/5"
+            >
+              $ share_roast
+            </Link>
+          </div>
         </section>
 
-        <section className="mb-8">
-          <h2 className="mb-4 font-mono text-xl">{data.roastTitle}</h2>
+        <div className="h-px w-full border-b border-border" />
+
+        {/* Submitted Code Section */}
+        <section className="mb-10 mt-10">
+          <div className="mb-4 flex items-center gap-2 font-mono text-sm font-bold">
+            <span className="text-emerald-500">{"//"}</span>
+            <span className="text-foreground">your_submission</span>
+          </div>
+          <CodeBlock code={data.code} lang={data.language} />
+        </section>
+
+        <div className="h-px w-full border-b border-border" />
+
+        {/* Analysis Section */}
+        <section className="mb-10 mt-10">
+          <div className="mb-4 flex items-center gap-2 font-mono text-sm font-bold">
+            <span className="text-emerald-500">{"//"}</span>
+            <span className="text-foreground">detailed_analysis</span>
+          </div>
           <AnalysisCardRoot>
             <AnalysisCardHeader>
               <AnalysisCardTitle>Issues</AnalysisCardTitle>
@@ -164,28 +208,44 @@ async function ResultsContent({ id }: { id: string }) {
           </AnalysisCardRoot>
         </section>
 
-        <section className="mb-8">
-          <h2 className="mb-4 font-mono text-xl">
-            {DIFF_TITLE_PROMPT}{" "}
-            <span className="text-muted-foreground">{DIFF_TITLE_REST}</span>
-          </h2>
-          <CodeBlock>
-            <CodeBlockHeader>{data.language}</CodeBlockHeader>
-            <div className="flex flex-col">
-              {diffLines.map((line, idx) => {
-                let variant: "added" | "removed" | "context" = "context";
-                if (line.startsWith("+")) variant = "added";
-                else if (line.startsWith("-")) variant = "removed";
-                else if (line.startsWith("@@")) variant = "context";
+        <div className="h-px w-full border-b border-border" />
 
-                return (
-                  <DiffLine key={line} variant={variant}>
-                    {line}
-                  </DiffLine>
-                );
-              })}
+        {/* Diff Section */}
+        <section className="mb-10 mt-10">
+          <div className="mb-4 flex items-center gap-2 font-mono text-sm font-bold">
+            <span className="text-emerald-500">{"//"}</span>
+            <span className="text-foreground">suggested_fix</span>
+          </div>
+          <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
+            <div className="flex items-center justify-between border-b border-border px-4 py-2">
+              <span className="font-mono text-xs text-muted-foreground">
+                {diff.originalFile} → {diff.improvedFile}
+              </span>
             </div>
-          </CodeBlock>
+            <div className="flex flex-col font-mono text-[13px] leading-relaxed">
+              {diff.lines.map((line) => (
+                <div
+                  key={line.content}
+                  className={`flex px-4 py-1 ${
+                    line.type === "removed"
+                      ? "bg-red-500/10 text-red-400"
+                      : line.type === "added"
+                        ? "bg-emerald-500/10 text-emerald-400"
+                        : "text-muted-foreground"
+                  }`}
+                >
+                  <span className="w-4 mr-2 text-xs">
+                    {line.type === "added"
+                      ? "+"
+                      : line.type === "removed"
+                        ? "-"
+                        : " "}
+                  </span>
+                  <span>{line.content}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       </div>
     </main>

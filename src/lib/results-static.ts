@@ -85,7 +85,7 @@ export const RESULT_DATA = {
 };
 
 export const RESULTS_TITLE_PROMPT = "//";
-export const RESULTS_TITLE_REST = "your_submission";
+export const RESULTS_TITLE_REST = "results";
 
 export const ANALYSIS_TITLE_PROMPT = "//";
 export const ANALYSIS_TITLE_REST = "detailed_analysis";
