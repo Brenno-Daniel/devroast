@@ -3,17 +3,15 @@ import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import Link from "next/link";
 import { Suspense } from "react";
-import {
-  AnalysisCardDescription,
-  AnalysisCardHeader,
-  AnalysisCardRoot,
-  AnalysisCardTitle,
-  Badge,
-  CodeBlock,
-} from "@/components/ui";
+import { CodeBlock } from "@/components/ui";
 import { ScoreRing } from "@/components/ui/score-ring";
 import { getDb } from "@/db";
-import { analysisResults, submissions } from "@/db/schema";
+import {
+  analysisIssues,
+  analysisResults,
+  submissions,
+  suggestedFixes,
+} from "@/db/schema";
 
 export function generateStaticParams() {
   return [{ id: "placeholder" }];
@@ -29,12 +27,15 @@ async function ResultsContent({ id }: { id: string }) {
   cacheLife("minutes");
 
   const db = getDb();
+
+  // Get main submission + analysis
   const results = await db
     .select({
       submissionId: submissions.id,
       codeText: submissions.codeText,
       language: submissions.language,
       mode: submissions.mode,
+      analysisId: analysisResults.id,
       score: analysisResults.score,
       summaryRoast: analysisResults.summaryRoast,
       summaryStraight: analysisResults.summaryStraight,
@@ -59,6 +60,25 @@ async function ResultsContent({ id }: { id: string }) {
     );
   }
 
+  // Fetch issues related to this analysis
+  const issuesResult = await db
+    .select({
+      severity: analysisIssues.severity,
+      title: analysisIssues.title,
+      description: analysisIssues.description,
+    })
+    .from(analysisIssues)
+    .where(eq(analysisIssues.analysisId, result.analysisId));
+
+  // Fetch suggested fix
+  const fixResult = await db
+    .select({
+      diffText: suggestedFixes.diffText,
+    })
+    .from(suggestedFixes)
+    .where(eq(suggestedFixes.analysisId, result.analysisId))
+    .limit(1);
+
   const data = {
     id: result.submissionId,
     code: result.codeText,
@@ -71,13 +91,16 @@ async function ResultsContent({ id }: { id: string }) {
         : result.summaryStraight || "Analysis Complete!",
     lines: result.codeText.split("\n").length,
     verdict: Number(result.score) <= 3 ? "needs_serious_help" : "acceptable",
-    issues: [
-      {
-        severity: "warning",
-        title: "Sample issue",
-        description: "This is sample data - update when issues are stored",
-      },
-    ],
+    issues:
+      issuesResult.length > 0
+        ? issuesResult
+        : [
+            {
+              severity: "warning",
+              title: "Sample issue",
+              description: "This is sample data",
+            },
+          ],
   };
 
   const getFileName = (lang: string) => {
@@ -86,26 +109,37 @@ async function ResultsContent({ id }: { id: string }) {
     return "your_code.js";
   };
 
-  const diff = {
-    originalFile: getFileName(result.language),
-    improvedFile: "improved_code.js",
-    lines: [
-      { type: "context", content: "function calculateTotal(items) {" },
-      { type: "removed", content: "  var total = 0;" },
-      {
-        type: "removed",
-        content: "  for (var i = 0; i < items.length; i++) {",
-      },
-      { type: "removed", content: "    total = total + items[i].price;" },
-      { type: "removed", content: "  }" },
-      { type: "removed", content: "  return total;" },
-      {
-        type: "added",
-        content: "  return items.reduce((sum, item) => sum + item.price, 0);",
-      },
-      { type: "context", content: "}" },
-    ],
-  };
+  // Parse diff from DB or use sample
+  const diffText = fixResult[0]?.diffText;
+  const defaultDiff = [
+    { type: "context", content: "function calculateTotal(items) {" },
+    { type: "removed", content: "  var total = 0;" },
+    { type: "removed", content: "  for (var i = 0; i < items.length; i++) {" },
+    { type: "removed", content: "    total = total + items[i].price;" },
+    { type: "removed", content: "  }" },
+    { type: "removed", content: "  return total;" },
+    {
+      type: "added",
+      content: "  return items.reduce((sum, item) => sum + item.price, 0);",
+    },
+    { type: "context", content: "}" },
+  ];
+
+  const diff = diffText
+    ? {
+        originalFile: getFileName(result.language),
+        improvedFile: "improved_code.js",
+        lines: diffText.split("\n").map((line: string) => {
+          if (line.startsWith("+")) return { type: "added", content: line };
+          if (line.startsWith("-")) return { type: "removed", content: line };
+          return { type: "context", content: line };
+        }),
+      }
+    : {
+        originalFile: getFileName(result.language),
+        improvedFile: "improved_code.js",
+        lines: defaultDiff,
+      };
 
   const getIssueVariant = (severity: string) => {
     switch (severity) {
@@ -188,24 +222,45 @@ async function ResultsContent({ id }: { id: string }) {
             <span className="text-emerald-500">{"//"}</span>
             <span className="text-foreground">detailed_analysis</span>
           </div>
-          <AnalysisCardRoot>
-            <AnalysisCardHeader>
-              <AnalysisCardTitle>Issues</AnalysisCardTitle>
-              <AnalysisCardDescription>
-                Findings from analysis
-              </AnalysisCardDescription>
-            </AnalysisCardHeader>
-            <div className="flex flex-col gap-4 p-6">
-              {data.issues.map((issue) => (
-                <Badge
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {data.issues.map((issue) => {
+              const severityColor =
+                issue.severity === "critical"
+                  ? "text-red-500"
+                  : issue.severity === "warning"
+                    ? "text-amber-500"
+                    : "text-emerald-500";
+
+              const dotColor =
+                issue.severity === "critical"
+                  ? "bg-red-500"
+                  : issue.severity === "warning"
+                    ? "bg-amber-500"
+                    : "bg-emerald-500";
+
+              return (
+                <div
                   key={issue.title}
-                  variant={getIssueVariant(issue.severity)}
+                  className="rounded-md border border-border p-5"
                 >
-                  {issue.severity}: {issue.title}
-                </Badge>
-              ))}
-            </div>
-          </AnalysisCardRoot>
+                  <div className="mb-3 flex items-center gap-2">
+                    <div className={`h-2 w-2 rounded-full ${dotColor}`} />
+                    <span
+                      className={`font-mono text-xs font-medium ${severityColor}`}
+                    >
+                      {issue.severity}
+                    </span>
+                  </div>
+                  <h3 className="font-mono text-[13px] font-medium text-foreground mb-2">
+                    {issue.title}
+                  </h3>
+                  <p className="font-mono text-xs text-muted-foreground leading-relaxed">
+                    {issue.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
         </section>
 
         <div className="h-px w-full border-b border-border" />
