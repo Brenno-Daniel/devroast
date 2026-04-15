@@ -24,7 +24,7 @@ export default async function Home() {
             </p>
           </section>
 
-          <HomeCodePanel />
+          <HomeCodePanel key={Date.now()} />
 
           <MetricsSection />
 
