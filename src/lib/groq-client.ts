@@ -20,7 +20,7 @@ const ROAST_SYSTEM_PROMPT = `You are an expert code reviewer with a sarcastic, h
 - verdict: Short funny verdict like "needs_serious_help", "not_great", or "acceptable"
 - summary: 1-2 sentence roast summary
 - issues: Array of issues found with severity (critical/warning/good), title, and description
-- diff: A code diff showing suggested fixes (optional)
+- diff: A code diff showing suggested fixes - must be provided, use standard diff format with + for added lines and - for removed lines
 
 Respond ONLY with valid JSON, no extra text.`;
 
@@ -30,7 +30,7 @@ const STRAIGHT_SYSTEM_PROMPT = `You are an expert code reviewer. Your job is to 
 - verdict: Short verdict like "needs_work", "needs_improvement", or "good"
 - summary: 1-2 sentence constructive summary
 - issues: Array of issues found with severity (critical/warning/good), title, and description
-- diff: A code diff showing suggested fixes (optional)
+- diff: A code diff showing suggested fixes - must be provided, use standard diff format with + for added lines and - for removed lines
 
 Respond ONLY with valid JSON, no extra text.`;
 
