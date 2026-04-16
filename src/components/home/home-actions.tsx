@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/switch";
 import type { EditorLanguageId } from "@/lib/editor-languages";
 import { HOME_ROAST_HINT, HOME_SUBMIT_LABEL } from "@/lib/home-static";
+import { toast } from "@/lib/toast";
 
 export type HomeActionsProps = {
   code: string;
@@ -54,7 +55,7 @@ export function HomeActions({
       }
     } catch (error) {
       console.error("Submit error:", error);
-      alert("Error submitting code. Please try again.");
+      toast.error("Error submitting code. Please try again.");
       setIsLoading(false);
     }
   };
