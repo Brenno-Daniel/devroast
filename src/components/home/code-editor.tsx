@@ -67,7 +67,7 @@ export function CodeEditor({
         maxLength={maxLength}
       />
       {maxLength !== undefined && (
-        <div className="pointer-events-none absolute bottom-2 right-3 font-mono text-[11px]">
+        <div className="pointer-events-none absolute bottom-2 right-10 font-mono text-[11px]">
           <span
             className={cn(
               value.length > maxLength

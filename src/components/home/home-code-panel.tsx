@@ -70,38 +70,42 @@ export function HomeCodePanel() {
   return (
     <div className="mx-auto flex w-full max-w-[780px] flex-col gap-4">
       <div className="overflow-hidden rounded-md border border-border bg-[#111111]">
-        <CodeBlockHeader filename={HOME_CODE_FILENAME} />
-        <div className="flex min-h-10 flex-wrap items-center gap-3 border-border border-b px-4 py-2">
-          <label className="sr-only" htmlFor="home-lang-select">
-            Language
-          </label>
-          <select
-            className="max-w-[180px] rounded border border-border bg-[#0F0F0F] px-2 py-1 text-muted-foreground text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            id="home-lang-select"
-            onChange={(e) => {
-              const v = e.target.value;
-              if (v === AUTO_VALUE) {
-                setManualLanguage(null);
-              } else {
-                setManualLanguage(v as EditorLanguageId);
-              }
-            }}
-            value={languageSelectValue}
-          >
-            <option value={AUTO_VALUE}>Auto</option>
-            {EDITOR_LANGUAGES.map((l) => (
-              <option key={l.id} value={l.id}>
-                {l.label}
-              </option>
-            ))}
-          </select>
-          {autoHint ? (
-            <span className="text-muted-foreground text-xs">
-              <span aria-hidden> · </span>
-              {autoHint}
-            </span>
-          ) : null}
-        </div>
+        <CodeBlockHeader
+          filename={HOME_CODE_FILENAME}
+          trailing={
+            <>
+              <label className="sr-only" htmlFor="home-lang-select">
+                Language
+              </label>
+              <select
+                className="max-w-[180px] rounded border border-border bg-[#0F0F0F] px-2 py-1 text-muted-foreground text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                id="home-lang-select"
+                onChange={(e) => {
+                  const v = e.target.value;
+                  if (v === AUTO_VALUE) {
+                    setManualLanguage(null);
+                  } else {
+                    setManualLanguage(v as EditorLanguageId);
+                  }
+                }}
+                value={languageSelectValue}
+              >
+                <option value={AUTO_VALUE}>Auto</option>
+                {EDITOR_LANGUAGES.map((l) => (
+                  <option key={l.id} value={l.id}>
+                    {l.label}
+                  </option>
+                ))}
+              </select>
+              {autoHint ? (
+                <span className="text-muted-foreground text-xs">
+                  <span aria-hidden> · </span>
+                  {autoHint}
+                </span>
+              ) : null}
+            </>
+          }
+        />
         <CodeEditor
           highlightHtml={highlightHtml}
           maxLength={MAX_CODE_LENGTH}

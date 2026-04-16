@@ -1,11 +1,17 @@
+import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 export type CodeBlockHeaderProps = {
   filename?: string;
+  trailing?: ReactNode;
   className?: string;
 };
 
-export function CodeBlockHeader({ filename, className }: CodeBlockHeaderProps) {
+export function CodeBlockHeader({
+  filename,
+  trailing,
+  className,
+}: CodeBlockHeaderProps) {
   return (
     <div
       className={cn(
@@ -22,6 +28,9 @@ export function CodeBlockHeader({ filename, className }: CodeBlockHeaderProps) {
         <span className="min-w-0 flex-1 truncate font-mono text-[#4B5563] text-xs">
           {filename}
         </span>
+      ) : null}
+      {trailing ? (
+        <div className="flex items-center gap-3">{trailing}</div>
       ) : null}
     </div>
   );
